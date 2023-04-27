@@ -1,0 +1,2 @@
+# KristiansLeonovicsKvalifikacijasPrakse
+Github repozitorija priekš kvalifikācijas prakses
