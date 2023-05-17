@@ -8,7 +8,7 @@
     <link rel="stylesheet" type="text/css" href= "static/datu_apstrade.css">
     <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0-alpha2/dist/css/bootstrap.min.css" rel="stylesheet" integrity="sha384-aFq/bzH65dt+w6FI2ooMVUpc+21e0SRygnTpmBvdBgSdnuTN7QbdgL+OapgHtvPp" crossorigin="anonymous">
     <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0-alpha2/dist/js/bootstrap.bundle.min.js" integrity="sha384-qKXV1j0HvMUeCBQ+QVp7JcfGl760yU08IQ+GpUo5hlbpg51QRiuqHAJz8+BrxE/N" crossorigin="anonymous"></script>
-    <title>Horsify jāšanas skolas</title>
+    <title>Horsify Zirgu pakavu kalēji</title>
 </head>
 <script>
   function resetSearch() {
@@ -47,16 +47,16 @@
         <div class="container">
           <div class="row">
             <div class="col-md-6">
-              <form method="post" action="{{ url_for('skolas') }}">
+              <form method="post" action="{{ url_for('kaleji') }}">
                 <div class="input-group mb-3">
-                  <label class="input-group-text" for="search">Ievadiet skolas nosaukumu: </label>
-                  <input class="form-control" type="search" placeholder="Skolas nosaukums" aria-label="skolas nosaukums" name="search">
+                  <label class="input-group-text" for="search">Ievadiet Pakavu kalēja nosaukumu: </label>
+                  <input class="form-control" type="search" placeholder="Pakavu kalēja nosaukums" aria-label="Pakavu kalēja nosaukums" name="search">
                 </div>
             </div>
             <div class="col-md-6">
                 <div class="input-group mb-3">
-                  <label class="input-group-text" for="location">Ievadiet skolas atrašanās vietu</label>
-                  <input class="form-control" type="search" placeholder="Skolas atrašanās vieta" aria-label="skolas atrašanās vieta" name="location">
+                  <label class="input-group-text" for="location">Ievadiet pakavu kalēja atrašanās vietu</label>
+                  <input class="form-control" type="search" placeholder="Pakavu kalēja atrašanās vieta" aria-label="Pakavu kalēja atrašanās vieta" name="location">
                 </div>
             </div>
           </div>
@@ -71,14 +71,14 @@
       </div>
 
       <div class="datu_apstrade_container">
-            {% for skolas in skolaslist %}
-                <div class="card skolascard" style="width: 18rem;">
+            {% for pakavu_kaleji in pakavu_kaleji_list %}
+                <div class="card pakavu_kaleji_card" style="width: 18rem;">
                     <div class="card-body">
-                        <h2 class="skolasvirsraksts">{{ skolas.nosaukums }}</h2>
-                        <p class="skolasatrasanasvieta">{{ skolas.atrasanasvieta }}</p>
-                        <p class="skolasdarbalaiks">{{ skolas.darbalaiks }}</p>
-                        <p class="skolasWEBadrese"><a href="{{ url_for('website', website=skolas.WEBadrese) }}" target="_blank">{{ skolas.WEBadrese }}</a></p>
-                        <p class="skolastelefonanumurs">{{ skolas.telefonanumurs }}</p>
+                        <h2 class="pakavu_kaleji_virsraksts">{{ pakavu_kaleji.nosaukums }}</h2>
+                        <p class="pakavu_kaleji_atrasanasvieta">{{ pakavu_kaleji.atrasanasvieta }}</p>
+                        <p class="pakavu_kaleji_darbalaiks">{{ pakavu_kaleji.darbalaiks }}</p>
+                        <p class="pakavu_kaleji_WEBadrese"><a href="{{ url_for('website', website=pakavu_kaleji.WEBadrese) }}" target="_blank">{{ pakavu_kaleji.WEBadrese }}</a></p>
+                        <p class="pakavu_kaleji_telefonanumurs">{{ pakavu_kaleji_.telefonanumurs }}</p>
                     </div>
                 </div>
             {% endfor %}

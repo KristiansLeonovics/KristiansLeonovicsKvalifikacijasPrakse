@@ -6,6 +6,7 @@ mysql = MySQL()
 
 def login_jasana():
     msg = ''
+    loggedin = False
     if request.method == 'POST' and 'lietotajvards' in request.form and 'parole' in request.form:
         username = request.form['lietotajvards']
         password = request.form['parole']
@@ -16,8 +17,19 @@ def login_jasana():
             session['loggedin'] = True
             session['ID'] = account['ID']
             session['lietotajvards'] = account['lietotajvards']
-            return render_template('mainpage.html')
+            loggedin = True
+
+            if account['lietotajvards'] == 'adminlietotajs' and account['parole'] == 'adminparole123':
+                return render_template('amainpage.html', loggedin=loggedin)
+            else:
+                return render_template('mainpage.html', loggedin=loggedin)
         else:
             msg = 'Nepareizi ievadīts lietotājvārds vai parole!'
     return render_template('/login.html', msg=msg)
 
+def atslegsanas_no_sistemas(loggedin = True):
+   session.pop('loggedin', None)
+   session.pop('ID', None)
+   session.pop('lietotajvards', None)
+   session.pop('parole', None)
+   return redirect(url_for('home'))

@@ -3,7 +3,10 @@ from flask_socketio import SocketIO
 from flask_mysqldb import MySQL
 import MySQLdb.cursors
 
-from autorizacija import login_jasana
+import autorizacija
+import lietotaja_profils
+import lietotaji
+import datu_atrade
 from register import register_jasana
 
 app = Flask(__name__, static_url_path='/static', static_folder='static')
@@ -20,29 +23,45 @@ mysql = MySQL(app)
 def home():
     return render_template('mainpage.html')
 
-@app.route('/skola')
+@app.route('/skola', methods=['GET', 'POST'])
 def skolas():
-    return render_template('skolas.html')
+    return datu_atrade.skolas()
 
-@app.route('/kaleji')
+@app.route('/kaleji', methods=['GET', 'POST'])
 def kaleji():
-    return render_template('kaleji.html')
+    return datu_atrade.pakavu_kaleji()
 
-@app.route('/veikali')
+@app.route('/veikali', methods=['GET', 'POST'])
 def veikali():
-    return render_template('veikali.html')
+    return datu_atrade.veikali()
 
-@app.route('/arsti')
+@app.route('/arsti', methods=['GET', 'POST'])
 def arsti():
-    return render_template('arsti.html')
+    return datu_atrade.zirgu_veterinararsti()
+
+@app.route('/website/<string:website>')
+def website(website):
+    return redirect('http://' + website)
 
 @app.route('/autorizacija', methods=['GET', 'POST'])
 def login():
-    return login_jasana()
+    return autorizacija.login_jasana()
 
 @app.route('/register', methods=['GET', 'POST'])
 def register():
     return register_jasana()
+
+@app.route('/logout')
+def logout():
+    return autorizacija.atslegsanas_no_sistemas(loggedin = False)
+
+@app.route('/profile')
+def profile():
+    return lietotaja_profils.atslegsanas_no_sistemas()
+
+@app.route('/sacensibas')
+def sacensibas():
+    return render_template('sacensibas.html')
 
 if __name__ == "__main__":
     socketio.run(app,host="0.0.0.0", port=80, debug=True)

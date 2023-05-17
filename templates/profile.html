@@ -4,13 +4,11 @@
     <meta charset="UTF-8">
     <meta http-equiv="X-UA-Compatible" content="IE=edge">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <link rel="stylesheet" type="text/css" href= "static/mainpage.css">
     <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0-alpha2/dist/css/bootstrap.min.css" rel="stylesheet" integrity="sha384-aFq/bzH65dt+w6FI2ooMVUpc+21e0SRygnTpmBvdBgSdnuTN7QbdgL+OapgHtvPp" crossorigin="anonymous">
     <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0-alpha2/dist/js/bootstrap.bundle.min.js" integrity="sha384-qKXV1j0HvMUeCBQ+QVp7JcfGl760yU08IQ+GpUo5hlbpg51QRiuqHAJz8+BrxE/N" crossorigin="anonymous"></script>
     <title>Horsify</title>
 </head>
 <body>
-
     <nav class="navbar navbar-expand-lg mainpagenavbar">
         <div class="container-fluid">
           <a class="navbar-brand NavbarSign" href="{{ url_for('home') }}" style="color: white;">Horsify</a>
@@ -20,7 +18,7 @@
           <div class="collapse navbar-collapse" id="navbarSupportedContent">
             <ul class="navbar-nav me-auto mb-2 mb-lg-0 ml-auto">
               <li class="nav-item">
-                <a class="nav-link NavbarSign" href="{{ url_for('sacensibas') }}" style="color: white">Latvijas un ārzemju sacensību saraksti</a>
+                <a class="nav-link NavbarSign" href="#" style="color: white">Latvijas un ārzemju sacensību saraksti</a>
               </li>
               <li class="nav-item dropdown">
                 <a class="nav-link dropdown-toggle NavbarSign" style="color: white" href="#" role="button" data-bs-toggle="dropdown" aria-expanded="false">
@@ -67,31 +65,20 @@
         </div>
       </nav>
 
-      <div id="carouselExampleInterval" class="carousel slide" data-bs-ride="carousel">
-        <div class="carousel-inner">
-          <div class="carousel-item active" data-bs-interval="2000">
-            <img src="/static/1.jpg" class="d-block" style="width: 100%; max-height: 650px;" alt="Zirgi">
-          </div>
-          <div class="carousel-item" data-bs-interval="2000">
-            <img src="/static/3.png" class="d-block" style="width: 100%; max-height: 650px;" alt="Zirgi">
-          </div>
-          <div class="carousel-item" data-bs-interval="2000">
-            <img src="/static/4..jpg" class="d-block" style="width: 100%; max-height: 650px;" alt="Zirgi">
-          </div>
-        </div>
-        <button class="carousel-control-prev" type="button" data-bs-target="#carouselExampleInterval" data-bs-slide="prev">
-          <span class="carousel-control-prev-icon" aria-hidden="true"></span>
-          <span class="visually-hidden">Iepriekšējais</span>
-        </button>
-        <button class="carousel-control-next" type="button" data-bs-target="#carouselExampleInterval" data-bs-slide="next">
-          <span class="carousel-control-next-icon" aria-hidden="true"></span>
-          <span class="visually-hidden">Nākošais</span>
-        </button>
+      <h2 style="text-align:center; margin: 30px;">Lietotāja informācija</h2>
+<div>
+    <div class="card container text-center">
+      <div class="card-header">
+        Jūsu lietotāja informācija
       </div>
-
-      <div class="skolastutorial">
-        <h2 class="welcomesign">Esiet sveicināti Horsify sistēmā!</h2>
-        <h2 class="welcomesign">Šeit Jūs varat apskatīt jātnieku skolas, ekipējuma veikalus, izveidot personalizētu grafiku un daudz ko vairāk!</h2>
+      <div class="card-body">
+        <blockquote class="blockquote mb-0">
+          <footer class="blockquote-footer">Lietotājvārds: <cite title="Source Title">{{ account['lietotajvards'] }}</cite></footer>
+          <footer class="blockquote-footer">Parole: <cite title="Source Title">{{ account['parole'] }}</cite></footer>
+          <footer class="blockquote-footer">E-pasts: <cite title="Source Title">{{ account['epasts'] }}</cite></footer>
+        </blockquote>
       </div>
+    </div>
+</div>
 </body>
 </html>
