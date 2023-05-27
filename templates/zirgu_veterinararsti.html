@@ -4,7 +4,7 @@
     <meta charset="UTF-8">
     <meta http-equiv="X-UA-Compatible" content="IE=edge">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <link rel="stylesheet" type="text/css" href= "static/mainpage.css">
+    <link rel="stylesheet" type="text/css" href= "static/amainpage.css">
     <link rel="stylesheet" type="text/css" href= "static/datu_apstrade.css">
     <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0-alpha2/dist/css/bootstrap.min.css" rel="stylesheet" integrity="sha384-aFq/bzH65dt+w6FI2ooMVUpc+21e0SRygnTpmBvdBgSdnuTN7QbdgL+OapgHtvPp" crossorigin="anonymous">
     <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0-alpha2/dist/js/bootstrap.bundle.min.js" integrity="sha384-qKXV1j0HvMUeCBQ+QVp7JcfGl760yU08IQ+GpUo5hlbpg51QRiuqHAJz8+BrxE/N" crossorigin="anonymous"></script>
@@ -18,31 +18,9 @@
 }
 </script>
 <body>
-    <nav class="navbar navbar-expand-lg mainpagenavbar">
-        <div class="container-fluid">
-          <a class="navbar-brand NavbarSign" href="{{ url_for('home') }}" style="color: white;">Horsify</a>
-          <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarSupportedContent" aria-controls="navbarSupportedContent" aria-expanded="false" aria-label="Toggle navigation">
-            <span class="navbar-toggler-icon"></span>
-          </button>
-          <div class="collapse navbar-collapse" id="navbarSupportedContent">
-            <ul class="navbar-nav me-auto mb-2 mb-lg-0 ml-auto">
-              <li class="nav-item">
-                <a class="nav-link NavbarSign" href="#" style="color: white">Latvijas un ārzemju sacensību saraksti</a>
-              </li>
-              <li class="nav-item dropdown">
-                <a class="nav-link dropdown-toggle NavbarSign" style="color: white" href="#" role="button" data-bs-toggle="dropdown" aria-expanded="false">
-                  Jātnieku un zirgu ērtības
-                </a>
-                <ul class="dropdown-menu">
-                  <li><a class="dropdown-item" href="{{ url_for('skolas') }}">Skolas</a></li>
-                  <li><a class="dropdown-item" href="{{ url_for('veikali') }}">Jāšanas ekipējumu veikali</a></li>
-                  <li><a class="dropdown-item" href="{{ url_for('kaleji') }}">Pakavu kalēji</a></li>
-                  <li><a class="dropdown-item" href="{{ url_for('arsti') }}">Zirgu veterinārārsti</a></li>
-                </ul>
-              </li>
-            </ul>
-          </div>
-        </nav>
+  {% extends 'layout.html' %}
+
+  {% block content %}
       <div class="possitioncontrol">
         <div class="container">
           <div class="row">
@@ -62,8 +40,8 @@
           </div>
           <div class="row">
             <div class="col-md-12 text-center">
-              <button class="btn btn-outline-success me-2" type="submit">Search</button>
-              <button class="btn btn-outline-danger" type="submit" onclick="resetSearch()">Reset</button>
+              <button class="btn btn-outline-success me-2" type="submit">Meklēt</button>
+              <button class="btn btn-outline-danger" type="submit" onclick="resetSearch()">Noņemt filtrus</button>
             </div>
           </div>
           </form>
@@ -74,14 +52,16 @@
             {% for zirgu_veterinararsti in zirgu_veterinararsti_list %}
                 <div class="card zirgu_veterinararsticard" style="width: 18rem;">
                     <div class="card-body">
-                        <h2 class="zirgu_veterinararsti_virsraksts">{{ zirgu_veterinararsti.nosaukums }}</h2>
-                        <p class="zirgu_veterinararsti_atrasanasvieta">{{ zirgu_veterinararsti.atrasanasvieta }}</p>
-                        <p class="zirgu_veterinararsti_darbalaiks">{{ zirgu_veterinararsti.darbalaiks }}</p>
-                        <p class="zirgu_veterinararsti_WEBadrese"><a href="{{ url_for('website', website=zirgu_veterinararsti.WEBadrese) }}" target="_blank">{{ zirgu_veterinararsti.WEBadrese }}</a></p>
-                        <p class="zirgu_veterinararsti_telefonanumurs">{{ zirgu_veterinararsti.telefonanumurs }}</p>
+                        <h2 class="zirgu_veterinararsti_virsraksts">Nosaukums: {{ zirgu_veterinararsti.nosaukums }}</h2>
+                        <p class="zirgu_veterinararsti_atrasanasvieta">Atrašanās vieta: {{ zirgu_veterinararsti.atrasanasvieta }}</p>
+                        <p class="zirgu_veterinararsti_darbalaiks">Darba laiks: {{ zirgu_veterinararsti.darbalaiks }}</p>
+                        <p class="zirgu_veterinararsti_WEBadrese"> Mājas lapa: <a href="{{ url_for('website', website=zirgu_veterinararsti.WEBadrese) }}" target="_blank">{{ zirgu_veterinararsti.WEBadrese }}</a></p>
+                        <p class="zirgu_veterinararsti_telefonanumurs">Telefona numurs: {{ zirgu_veterinararsti.telefonanumurs }}</p>
                     </div>
                 </div>
             {% endfor %}
         </div>
 </body>
 </html>
+
+{% endblock %}

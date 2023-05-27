@@ -25,7 +25,7 @@ def skolas():
             skolaslist = db
     else:
         skolaslist = db
-    return render_template("skolas.html", skolaslist=skolaslist)
+    return render_template("skolas.html", skolaslist=skolaslist, loggedin=session.get('loggedin', False))
 
 def veikali():
     cursor = mysql.connection.cursor(MySQLdb.cursors.DictCursor)
@@ -46,7 +46,7 @@ def veikali():
             veikalilist = db
     else:
         veikalilist = db
-    return render_template("veikali.html", veikalilist=veikalilist)
+    return render_template("veikali.html", veikalilist=veikalilist, loggedin=session.get('loggedin', False))
 
 def pakavu_kaleji():
     cursor = mysql.connection.cursor(MySQLdb.cursors.DictCursor)
@@ -67,7 +67,7 @@ def pakavu_kaleji():
             pakavu_kaleji_list = db
     else:
         pakavu_kaleji_list = db
-    return render_template("pakavu_kaleji.html", pakavu_kaleji_list=pakavu_kaleji_list)
+    return render_template("pakavu_kaleji.html", pakavu_kaleji_list=pakavu_kaleji_list, loggedin=session.get('loggedin', False))
 
 def zirgu_veterinararsti():
     cursor = mysql.connection.cursor(MySQLdb.cursors.DictCursor)
@@ -88,4 +88,4 @@ def zirgu_veterinararsti():
             zirgu_veterinararsti_list = db
     else:
         zirgu_veterinararsti_list = db
-    return render_template("zirgu_veterinararsti.html", zirgu_veterinararsti_list=zirgu_veterinararsti_list)
+    return render_template("zirgu_veterinararsti.html", zirgu_veterinararsti_list=zirgu_veterinararsti_list, loggedin=session.get('loggedin', False))

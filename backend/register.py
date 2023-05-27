@@ -7,9 +7,10 @@ mysql = MySQL()
 
 def register_jasana():
     msg = ''
-    if request.method == 'POST' and 'lietotajvards' in request.form and 'parole' in request.form and 'epasts' in request.form and 'telefona_numurs' in request.form:
+    if request.method == 'POST' and 'lietotajvards' in request.form and 'parole' in request.form and 'atkartot_paroli' in request.form and 'epasts' in request.form and 'telefona_numurs' in request.form:
         username = request.form['lietotajvards']
         password = request.form['parole']
+        atkartot_paroli = request.form['atkartot_paroli']
         email = request.form['epasts']
         telefona_numurs = request.form['telefona_numurs']
         cursor = mysql.connection.cursor(MySQLdb.cursors.DictCursor)
@@ -21,8 +22,10 @@ def register_jasana():
             msg = 'Nepareizi ievadīta e-pasta adrese!'
         elif not re.match(r'[A-Za-z0-9]+', username):
             msg = 'Lietotājvārdā izmantojiet tikai burtus un ciparus!'
-        elif not username or not password or not email or not telefona_numurs:
+        elif not username or not password or not atkartot_paroli or not email or not telefona_numurs:
             msg = 'Lūdzu aizpildiet visus laukus!'
+        elif password != atkartot_paroli:
+            msg = 'Paroles nesakrīt!'
         else:
             cursor.execute('INSERT INTO lietotaji VALUES (NULL, %s, %s, %s, %s)', (username, email, password, telefona_numurs,))
             mysql.connection.commit()

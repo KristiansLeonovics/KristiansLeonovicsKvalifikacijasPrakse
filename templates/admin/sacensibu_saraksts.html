@@ -1,0 +1,151 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <link rel="stylesheet" type="text/css" href="static/amainpage.css">
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0-alpha2/dist/css/bootstrap.min.css" rel="stylesheet" integrity="sha384-aFq/bzH65dt+w6FI2ooMVUpc+21e0SRygnTpmBvdBgSdnuTN7QbdgL+OapgHtvPp" crossorigin="anonymous">
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0-alpha2/dist/js/bootstrap.bundle.min.js" integrity="sha384-qKXV1j0HvMUeCBQ+QVp7JcfGl760yU08IQ+GpUo5hlbpg51QRiuqHAJz8+BrxE/N" crossorigin="anonymous"></script>
+    <title>Horsify sacensību saraksts</title>
+</head>
+
+<style>
+  body {
+    background-image: url("/static/1.jpg");
+    background-size: cover;
+  }
+</style>
+
+<body>
+  {% extends 'layout.html' %}
+
+  {% block content %}
+
+  <div class="container text-center">
+    <div class="row">
+      <div class="col possition_control">
+        <div class="card">
+          <div class="card-header">
+            <h4>Labot Sacensību Datus</h4>
+          </div>
+          <div class="card-body">
+            <form action="{{ url_for('sacensibas_labot') }}" method="post">
+              <div class="mb-3">
+                <label for="exampleInputEmail1" class="form-label">nosaukums</label>
+                <input type="text" name="nosaukums" placeholder="Ievadiet sacensības nosaukumu" id="nosaukums" class="form-control" aria-describedby="emailHelp" required>
+              </div>
+              <div class="mb-3">
+                <label for="exampleInputEmail1" class="form-label">Jaunais Nosaukums</label>
+                <input type="text" name="jaunais_nosaukums" placeholder="Ievadiet sacensības jauno nosaukumu" id="jaunais_nosaukums" class="form-control" aria-describedby="emailHelp">
+              </div>
+              <div class="mb-3">
+                <label for="exampleInputEmail1" class="form-label">Atrašanās vieta</label>
+                <input type="text" name="atrasanasvieta" placeholder="Ievadiet sacensības jauno atrašanās vietu" id="atrasanasvieta" class="form-control" aria-describedby="emailHelp">
+              </div>
+              <div class="mb-3">
+                <label for="exampleInputEmail1" class="form-label">Sākuma Datums</label>
+                <input type="text" name="datums_sakums" placeholder="Ievadiet sacensības jauno datumu, kad sākas sacensības" id="datums_sakums" class="form-control" aria-describedby="emailHelp">
+              </div>
+              <div class="mb-3">
+                <label for="exampleInputEmail1" class="form-label">Beigu Datums</label>
+                <input type="text" name="datums_beigas" placeholder="Ievadiet sacensības jauno datumu, kad beidzas sacensības" id="datums_beigas" class="form-control" aria-describedby="emailHelp">
+              </div>
+              <div class="mb-3">
+                <label for="exampleInputEmail1" class="form-label">Jāšanas Norises Vieta</label>
+                <input type="text" name="jasanas_norises_vieta" placeholder="Ievadiet sacensības jauno jāšanas sacensības norises vietu (Latvija vai Ārzemes)" id="jasanas_norises_vieta" class="form-control" aria-describedby="emailHelp">
+              </div>
+
+              <button type="submit" value="edit" class="btn btn-primary">Labot sacensību</button>
+            </form>
+          </div>
+        </div>
+      </div>
+      <div class="col possition_control">
+        <div class="card">
+          <div class="card-header">
+            <h4>Pievienot Jaunu Sacensību Datubāzē</h4>
+          </div>
+          <div class="card-body">
+            <form action="{{ url_for('sacensibas_pievienot') }}" method="post">
+              <div class="mb-3">
+            <label for="exampleInputEmail1" class="form-label">Nosaukums</label>
+            <input type="text" name="nosaukums" placeholder="Ievadiet jaunās sacensības nosaukumu" id="nosaukums" class="form-control" aria-describedby="emailHelp" required >
+          </div>
+          <div class="mb-3">
+            <label for="exampleInputEmail1" class="form-label">Atrašanās vieta</label>
+            <input type="text" name="atrasanasvieta" placeholder="Ievadiet jaunās sacensības atrašanās vietu" id="atrasanasvieta" class="form-control" aria-describedby="emailHelp" required >
+          </div>
+          <div class="mb-3">
+            <label for="exampleInputEmail1" class="form-label">Sākuma datums</label>
+            <input type="text" name="datums_sakums" placeholder="Ievadiet jaunās sacensības datumu, kad sākas sacensības" id="datums_sakums" class="form-control" aria-describedby="emailHelp" required >
+          </div>
+          <div class="mb-3">
+            <label for="exampleInputEmail1" class="form-label">Beigu datums</label>
+            <input type="text" name="datums_beigas" placeholder="Ievadiet jaunās sacensības datumu, kad beidzas sacensības" id="datums_beigas" class="form-control" aria-describedby="emailHelp" required >
+          </div>
+          <div class="mb-3">
+            <label for="exampleInputEmail1" class="form-label">Jāšanas norises vieta</label>
+            <input type="text" name="jasanas_norises_vieta" placeholder="Ievadiet jaunās sacensības jāšanas sacensības norises vietu, kad beidzas sacensības" id="jasanas_norises_vieta" class="form-control" aria-describedby="emailHelp" required >
+          </div>
+
+              <button type="submit" value="add" class="btn btn-success">Pievienot Sacensību</button>
+            </form>
+          </div>
+        </div>
+      </div>
+      <div class="col possition_control">
+        <div class="card">
+          <div class="card-header">
+            <h4>Sacensību dzēšana</h4>
+          </div>
+          <div class="card-body">
+            <form action="{{ url_for('sacensibas_dzest') }}" method="post">
+              <div class="mb-3">
+            <label for="exampleInputEmail1" class="form-label">Nosaukums</label>
+            <input type="text" name="nosaukums" placeholder="ievadiet sacensības nosaukumu, kuru vēlaties izdzēst" id="nosaukums" class="form-control" aria-describedby="emailHelp" required >
+          </div>
+              <button type="submit" value="delete" class="btn btn-danger">Izdzēst sacensību</button>
+            </form>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <br>
+
+  <div class="container">
+    <div class="container-sm">
+      <table class="table table-bordered table-striped table-horse-theme" id="table">
+        <thead>
+          <tr>
+            <th scope="col">ID</th>
+            <th scope="col">Nosaukums</th>
+            <th scope="col">Atrašanās vieta</th>
+            <th scope="col">Sākuma datums</th>
+            <th scope="col">Beigas datums</th>
+            <th scope="col">Jāšanas norises vieta</th>
+          </tr>
+        </thead>
+        <tbody>
+          {% for ieraksts in datubaze %}
+          <tr>
+            <td>{{ieraksts.ID}}</td>
+            <td>{{ieraksts.nosaukums}}</td>
+            <td>{{ieraksts.atrasanas_vieta}}</td>
+            <td>{{ieraksts.datums_sakums}}</td>
+            <td>{{ieraksts.datums_beigas}}</td>
+            <td>{{ieraksts.jasanas_norises_vieta}}</td>
+          </tr>
+          {% endfor %}
+        </tbody>
+      </table>
+      <div class="text-center mt-3">
+        <a class="btn btn-primary" href="{{ url_for('PDF_dokuments_lietotaji') }}" target="_blank">Print as PDF</a>
+      </div>      
+    </div>
+  </div>
+</body>
+</html>
+  {% endblock %}
