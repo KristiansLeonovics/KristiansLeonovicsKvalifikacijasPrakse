@@ -1,8 +1,3 @@
-body {
-    background-image: url("/static/1.jpg");
-    background-size: cover;
-  }
-
   .navbar {
     background-color: #763626;
   }
@@ -44,3 +39,20 @@ body {
   .button-container .btn-primary {
     margin: 10px;
   }
+
+  .possition_control{
+    padding-top: 20px;
+  }
+
+  .table-horse-theme {
+    font-family: sans-serif;
+}
+
+  .table-horse-theme thead tr {
+    background-color: brown;
+    color: #ffffff;
+}
+
+  .table-horse-theme tbody tr {
+    background-color: #f3f3f3;
+}

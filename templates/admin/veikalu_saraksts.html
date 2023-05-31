@@ -1,0 +1,149 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <link rel="stylesheet" type="text/css" href="static/amainpage.css">
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0-alpha2/dist/css/bootstrap.min.css" rel="stylesheet" integrity="sha384-aFq/bzH65dt+w6FI2ooMVUpc+21e0SRygnTpmBvdBgSdnuTN7QbdgL+OapgHtvPp" crossorigin="anonymous">
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0-alpha2/dist/js/bootstrap.bundle.min.js" integrity="sha384-qKXV1j0HvMUeCBQ+QVp7JcfGl760yU08IQ+GpUo5hlbpg51QRiuqHAJz8+BrxE/N" crossorigin="anonymous"></script>
+    <title>Horsify Veikalu saraksts</title>
+</head>
+
+<style>
+  body {
+    background-image: url("/static/1.jpg");
+    background-size: cover;
+  }
+</style>
+
+<body>
+  {% extends 'layout.html' %}
+
+  {% block content %}
+
+  <div class="container text-center">
+    <div class="row">
+      <div class="col possition_control">
+        <div class="card">
+          <div class="card-header">
+            <h4>Labot Veikala Datus</h4>
+          </div>
+          <div class="card-body">
+            <form action="{{ url_for('veikali_labot') }}" method="post">
+              <div class="mb-3">
+                <label for="exampleInputEmail1" class="form-label">Nosaukums</label>
+                <input type="text" name="nosaukums" placeholder="Ievadiet veikala nosaukumu" id="nosaukums" class="form-control" aria-describedby="emailHelp" required>
+              </div>
+              <div class="mb-3">
+                <label for="exampleInputEmail1" class="form-label">Jaunais Nosaukums</label>
+                <input type="text" name="jaunais_nosaukums" placeholder="Ievadiet veikala jauno nosaukumu" id="jaunais_nosaukums" class="form-control" aria-describedby="emailHelp">
+              </div>
+              <div class="mb-3">
+                <label for="exampleInputEmail1" class="form-label">Atrašanās vieta</label>
+                <input type="text" name="atrasanasvieta" placeholder="Ievadiet veikala jauno atrašanos vietu" id="atrasanasvieta" class="form-control" aria-describedby="emailHelp">
+              </div>
+              <div class="mb-3">
+                <label for="exampleInputEmail1" class="form-label">darbalaiks</label>
+                <input type="text" name="darbalaiks" placeholder="Ievadiet veikala jauno darba laiku" id="darbalaiks" class="form-control" aria-describedby="emailHelp">
+              </div>
+              <div class="mb-3">
+                <label for="exampleInputEmail1" class="form-label">WEBadrese</label>
+                <input type="text" name="WEBadrese" placeholder="Ievadiet veikala jauno WEBadresi" id="WEBadrese" class="form-control" aria-describedby="emailHelp">
+              </div>
+              <div class="mb-3">
+                <label for="exampleInputEmail1" class="form-label">Telefona numurs</label>
+                <input type="text" name="telefonanumurs" placeholder="Ievadiet veikala jauno telefona numuru" id="telefonanumurs" class="form-control" aria-describedby="emailHelp">
+              </div>
+              <button type="submit" value="edit" class="btn btn-primary">Labot Veikalu</button>
+            </form>
+          </div>
+        </div>
+      </div>
+      <div class="col possition_control">
+        <div class="card">
+          <div class="card-header">
+            <h4>Pievienot Jaunu Veikalu Datubāzē</h4>
+          </div>
+          <div class="card-body">
+            <form action="{{ url_for('veikali_pievienot') }}" method="post">
+              <div class="mb-3">
+            <label for="exampleInputEmail1" class="form-label">Nosaukums</label>
+            <input type="text" name="nosaukums" placeholder="Ievadiet jaunā veikala nosaukumu" id="nosaukums" class="form-control" aria-describedby="emailHelp" required >
+          </div>
+          <div class="mb-3">
+            <label for="exampleInputEmail1" class="form-label">Atrašanās vieta</label>
+            <input type="text" name="atrasanasvieta" placeholder="Ievadiet jaunā veikala atrašanās vietu" id="atrasanasvieta" class="form-control" aria-describedby="emailHelp" required >
+          </div>
+          <div class="mb-3">
+            <label for="exampleInputEmail1" class="form-label">Darba laiks</label>
+            <input type="text" name="darbalaiks" placeholder="Ievadiet jaunā veikala darba laiku" id="darbalaiks" class="form-control" aria-describedby="emailHelp" required >
+          </div>
+          <div class="mb-3">
+            <label for="exampleInputEmail1" class="form-label">WEBadrese</label>
+            <input type="text" name="WEBadrese" placeholder="Ievadiet jaunā veikala WEBadresi" id="WEBadrese" class="form-control" aria-describedby="emailHelp" required >
+          </div>
+          <div class="mb-3">
+            <label for="exampleInputEmail1" class="form-label">Telefona Numurs</label>
+            <input type="text" name="telefonanumurs" placeholder="Ievadiet jaunā veikala telefona numuru" id="telefonanumurs" class="form-control" aria-describedby="emailHelp" required >
+          </div>
+              <button type="submit" value="add" class="btn btn-success">Pievienot Pakavu Kalēju</button>
+            </form>
+          </div>
+        </div>
+      </div>
+      <div class="col possition_control">
+        <div class="card">
+          <div class="card-header">
+            <h4>Veikala dzēšana</h4>
+          </div>
+          <div class="card-body">
+            <form action="{{ url_for('veikali_dzest') }}" method="post">
+              <div class="mb-3">
+            <label for="exampleInputEmail1" class="form-label">Nosaukums</label>
+            <input type="text" name="nosaukums" placeholder="ievadiet veikala nosaukumu, kuru vēlaties izdzēst" id="nosaukums" class="form-control" aria-describedby="emailHelp" required >
+          </div>
+              <button type="submit" value="delete" class="btn btn-danger">Izdzēst Veikalu</button>
+            </form>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <br>
+
+  <div class="container">
+    <div class="container-sm">
+      <table class="table table-bordered table-striped table-horse-theme" id="table">
+        <thead>
+          <tr>
+            <th scope="col">ID</th>
+            <th scope="col">Nosaukums</th>
+            <th scope="col">Atrašanās vieta</th>
+            <th scope="col">Darba laiks</th>
+            <th scope="col">WEBadrese</th>
+            <th scope="col">Telefona numurs</th>
+          </tr>
+        </thead>
+        <tbody>
+          {% for ieraksts in datubaze %}
+          <tr>
+            <td>{{ieraksts.ID}}</td>
+            <td>{{ieraksts.nosaukums}}</td>
+            <td>{{ieraksts.atrasanasvieta}}</td>
+            <td>{{ieraksts.darbalaiks}}</td>
+            <td>{{ieraksts.WEBadrese}}</td>
+            <td>{{ieraksts.telefonanumurs}}</td>
+          </tr>
+          {% endfor %}
+        </tbody>
+      </table>
+      <div class="text-center mt-3">
+        <a class="btn btn-primary" href="{{ url_for('PDF_dokuments_veikali') }}" target="_blank">Print as PDF</a>
+      </div>      
+    </div>
+  </div>
+</body>
+</html>
+  {% endblock %}
