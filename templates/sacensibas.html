@@ -49,27 +49,22 @@
     <div class="position-control">
         <div class="container">
           <div class="search-buttons">
-            <div class="row">
-              <div class="col-md-6">
+            <div class="row" style="padding-left: 100px;">
+              <div class="col-md-10">
                   <div class="input-group mb-3">
-                      <input type="text" class="form-control" id="locationSearch" placeholder="Search by location">
-                  </div>
-              </div>
-              <div class="col-md-6">
-                  <div class="input-group mb-3">
-                    <label class="input-group-text" for="location">Ievadiet skolas atrašanās vietu</label>
-                    <input class="form-control" type="search" placeholder="Skolas atrašanās vieta" aria-label="skolas atrašanās vieta" name="location">
+                    <label class="input-group-text" for="location">Ievadiet sacensības atrašanās vietu</label>
+                    <input id="locationSearch" class="form-control" type="search" placeholder="Sacensības atrašanās vieta" aria-label="Sacensības atrašanās vieta" name="location">
                   </div>
               </div>
             </div>
             <div class="row">
               <div class="col-md-12 text-center buttondiv">
-                  <button class="btn btn-secondary me-2" id="searchButton">Search</button>
-                  <button class="btn btn-secondary me-2" id="resetButton">Reset</button>
+                  <button class="btn btn-secondary me-2" id="searchButton">Meklēt</button>
+                  <button class="btn btn-secondary me-2" id="resetButton">Atiestatīt</button>
                   <br>
                   <br>
-                  <button type="button" class="btn btn-success" id="latvijasButton">Latvijas jāšanas sacensības</button>
-                  <button type="button" class="btn btn-success" id="arzemjuButton">Ārzemju jāšanas sacensības</button>
+                  <button type="button" class="btn btn-success" id="latvijasSacensibasButton">Latvijas jāšanas sacensības</button>
+                  <button type="button" class="btn btn-success" id="arzemjuSacensibasButton">Ārzemju jāšanas sacensības</button>
               </div>
             </div>
           </div>
@@ -80,6 +75,7 @@
               <div class="sacensiba" 
                   data-nosaukums="{{ sacensiba['nosaukums'] }}" 
                   data-atrasanas_vieta="{{ sacensiba['atrasanas_vieta'] }}"
+                  data-jasanas_norises_vieta="{{ sacensiba['jasanas_norises_vieta'] }}"
                   data-datums_sakums="{{ sacensiba['datums_sakums'] }}"
                   data-datums_beigas="{{ sacensiba['datums_beigas'] }}">
               </div>
@@ -108,99 +104,112 @@
         </div>
     </div>
     <script>
+
+        
+        document.addEventListener('DOMContentLoaded', function () {
         let calendarEl = document.getElementById('calendar');
         let events = [];
         let sacensibas = document.getElementsByClassName('sacensiba');
+        
         for (let i = 0; i < sacensibas.length; i++) {
             let sacensiba = sacensibas[i];
             let startDate = sacensiba.dataset.datums_sakums;
             let endDate = sacensiba.dataset.datums_beigas;
-    
+        
             if (startDate && endDate) {
-                let event = {
-                    title: sacensiba.dataset.nosaukums,
-                    start: new Date(startDate),
-                    end: new Date(endDate),
-                    location: sacensiba.dataset.atrasanas_vieta
-                };
-                events.push(event);
+            let event = {
+                title: sacensiba.dataset.nosaukums,
+                start: new Date(startDate),
+                end: new Date(endDate),
+                location: sacensiba.dataset.atrasanas_vieta,
+                jasanas_norises_vieta: sacensiba.dataset.jasanas_norises_vieta,
+            };
+            events.push(event);
             }
         }
-    
+        
         let calendar = new FullCalendar.Calendar(calendarEl, {
             events: events,
             locale: 'lv',
             eventClick: function (info) {
-                let eventTitle = info.event.title;
-                let eventLocation = info.event.extendedProps.location;
-                let eventStartDate = info.event.start;
-                let eventEndDate = info.event.end;
-    
-                let modal = document.getElementById('eventModal');
-                let modalTitle = modal.querySelector('.modal-title');
-                let modalLocation = modal.querySelector('.modal-location');
-                let modalStartDate = modal.querySelector('.modal-start-date');
-                let modalEndDate = modal.querySelector('.modal-end-date');
-    
-                modalTitle.textContent = eventTitle;
-                modalLocation.textContent = eventLocation;
-                modalStartDate.textContent = eventStartDate.toLocaleString();
-    
-                if (eventEndDate && eventEndDate > eventStartDate) {
-                    modalEndDate.textContent = eventEndDate.toLocaleString();
-                } else {
-                    modalEndDate.textContent = eventStartDate.toLocaleString();
-                }
-    
-                let bootstrapModal = new bootstrap.Modal(modal);
-                bootstrapModal.show();
+            let eventTitle = info.event.title;
+            let eventLocation = info.event.extendedProps.location;
+            let eventStartDate = info.event.start;
+            let eventEndDate = info.event.end;
+        
+            let modal = document.getElementById('eventModal');
+            let modalTitle = modal.querySelector('.modal-title');
+            let modalLocation = modal.querySelector('.modal-location');
+            let modalStartDate = modal.querySelector('.modal-start-date');
+            let modalEndDate = modal.querySelector('.modal-end-date');
+        
+            modalTitle.textContent = eventTitle;
+            modalLocation.textContent = eventLocation;
+            modalStartDate.textContent = eventStartDate.toLocaleString();
+        
+            if (eventEndDate && eventEndDate > eventStartDate) {
+                modalEndDate.textContent = eventEndDate.toLocaleString();
+            } else {
+                modalEndDate.textContent = eventStartDate.toLocaleString();
             }
+        
+            let bootstrapModal = new bootstrap.Modal(modal);
+            bootstrapModal.show();
+            },
         });
-    
+        
         calendar.render();
-    
+        
         document.getElementById('searchButton').addEventListener('click', function () {
             let locationSearch = document.getElementById('locationSearch').value;
+            let atrasanasVietaSearch = document.getElementsByName('location')[0].value;
+        
             calendar.getEvents().forEach(function (event) {
-                if (locationSearch) {
-                    if (event.extendedProps.location.toLowerCase().includes(locationSearch.toLowerCase())) {
-                        event.setProp('display', 'auto');
-                    } else {
-                        event.setProp('display', 'none');
-                    }
-                } else {
-                    event.setProp('display', 'auto');
-                }
+            let jasanasNorisesVieta = event.extendedProps.jasanas_norises_vieta.toLowerCase();
+        
+            if (
+                (locationSearch && jasanasNorisesVieta.includes(locationSearch.toLowerCase())) ||
+                (atrasanasVietaSearch && event.extendedProps.location.toLowerCase().includes(atrasanasVietaSearch.toLowerCase()))
+            ) {
+                event.setProp('display', 'auto');
+            } else {
+                event.setProp('display', 'none');
+            }
             });
         });
-    
+        
         document.getElementById('resetButton').addEventListener('click', function () {
             document.getElementById('locationSearch').value = '';
+            document.getElementsByName('location')[0].value = '';
+        
             calendar.getEvents().forEach(function (event) {
+            event.setProp('display', 'auto');
+            });
+        });
+        
+        document.getElementById('latvijasSacensibasButton').addEventListener('click', function () {
+            calendar.getEvents().forEach(function (event) {
+            let jasanasNorisesVieta = event.extendedProps.jasanas_norises_vieta.toLowerCase();
+        
+            if (jasanasNorisesVieta === 'latvija') {
                 event.setProp('display', 'auto');
+            } else {
+                event.setProp('display', 'none');
+            }
             });
         });
-    
-        document.getElementById('latvijasButton').addEventListener('click', function () {
+        
+        document.getElementById('arzemjuSacensibasButton').addEventListener('click', function () {
             calendar.getEvents().forEach(function (event) {
-                let location = event.extendedProps.location;
-                if (location.toLowerCase() !== 'latvija') {
-                    event.setProp('display', 'none');
-                } else {
-                    event.setProp('display', 'auto');
-                }
+            let jasanasNorisesVieta = event.extendedProps.jasanas_norises_vieta.toLowerCase();
+        
+            if (jasanasNorisesVieta === 'latvija') {
+                event.setProp('display', 'none');
+            } else {
+                event.setProp('display', 'auto');
+            }
             });
         });
-    
-        document.getElementById('arzemjuButton').addEventListener('click', function () {
-            calendar.getEvents().forEach(function (event) {
-                let location = event.extendedProps.location;
-                if (location.toLowerCase() === 'latvija') {
-                    event.setProp('display', 'none');
-                } else {
-                    event.setProp('display', 'auto');
-                }
-            });
         });
     </script>
     {% endblock %}

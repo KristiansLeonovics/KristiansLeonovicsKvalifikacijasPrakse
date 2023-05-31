@@ -7,7 +7,6 @@ mysql = MySQL()
 def login_jasana():
     msg = ''
     loggedin = False
-    is_admin = False
     if request.method == 'POST' and 'lietotajvards' in request.form and 'parole' in request.form:
         username = request.form['lietotajvards']
         password = request.form['parole']

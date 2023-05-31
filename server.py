@@ -13,7 +13,8 @@ import backend.sacensibu_saraksts as sacensibu_saraksts
 import backend.pakavu_kaleji_saraksts as pakavu_kaleji_saraksts
 import backend.zirgu_veterinararsti_saraksts as zirgu_veterinararsti_saraksts
 import backend.veikali_saraksts as veikali_saraksts
-import backend.kalendars as kalendars
+import backend.zirgu_pievienosana as zirgu_pievienosana
+import backend.personalizets_grafiks as grafiks
 from backend.register import register_jasana
 
 app = Flask(__name__, static_url_path='/static', static_folder='static')
@@ -62,13 +63,77 @@ def register():
 def logout():
     return autorizacija.atslegsanas_no_sistemas(loggedin = False)
 
-@app.route('/profile')
+
+@app.route('/personalizets_grafiks', methods=['GET', 'POST'])
+def personalizets_grafiks():
+    return grafiks.calendar()
+
+@app.route('/zirgu_pievienosana', methods=['GET', 'POST'])
+def pievienosana():
+    return zirgu_pievienosana.zirgu_pievienosana_sistemai()
+
+@app.route('/get_horses', methods=['GET'])
+def horses():
+    return grafiks.get_horses()
+
+@app.route('/get_hospitals', methods=['GET'])
+def hospitals():
+    return grafiks.get_hospitals()
+
+@app.route('/get_skolas', methods=['GET'])
+def skolas_personalizets_grafiks():
+    return grafiks.get_skolas()
+
+@app.route('/get_pakavu_kaleji', methods=['GET'])
+def pakavu_kaleji_personalizets_grafiks():
+    return grafiks.get_pakavu_kaleji()
+
+@app.route('/get_sacensibas', methods=['GET'])
+def sacensibas_personalizets_grafiks():
+    return grafiks.get_sacensibas()
+
+@app.route('/deleteEvent', methods=['DELETE'])
+def delete_personalizets_grafiks():
+    return grafiks.deleteevent()
+
+@app.route('/save_appointment_horses', methods=['POST'])
+def save_appointment_horse():
+    return grafiks.save_appointment_horses()
+
+@app.route('/save_appointment_skolas', methods=['POST'])
+def save_appointment_skola():
+    return grafiks.save_appointment_skolas()
+
+@app.route('/save_appointment_sacensibas', methods=['POST'])
+def save_appointment_sacensiba():
+    return grafiks.save_appointment_sacensibas()
+
+@app.route('/save_appointment_pakavu_kaleji', methods=['POST'])
+def save_appointment_pakavu_kalejs():
+    return grafiks.save_appointment_pakavu_kaleji()
+
+
+@app.route('/profile', methods=['GET', 'POST'])
 def profile():
-    return lietotaja_profils.profils()
+    if 'loggedin' in session:
+        return zirgu_pievienosana.get_zirgu_saraksts()
+    else:
+        return redirect('/login_jasana', loggedin=session.get('loggedin', False))
 
 @app.route('/sacensibas')
 def sacensibas():
-    return kalendars.get_events()
+    location = request.args.get('location', '')
+    if location == 'Latvija':
+        query = "SELECT * FROM sacensibas WHERE jasanas_norises_vieta = 'Latvija'"
+    elif location == 'Ārzemes':
+        query = "SELECT * FROM sacensibas WHERE jasanas_norises_vieta = 'Ārzemes'"
+    else:
+        query = "SELECT * FROM sacensibas"
+
+    cursor = mysql.connection.cursor(MySQLdb.cursors.DictCursor)
+    cursor.execute(query)
+    results = cursor.fetchall()
+    return render_template('sacensibas.html', sacensibas=results, loggedin = session.get('loggedin', False))
 
 @app.route('/amainpage')
 def amainpage():
@@ -251,21 +316,21 @@ def sacensibas_saraksts():
     else:
         return redirect('/login_jasana', loggedin=session.get('loggedin', False))
 
-@app.route('/sacensibas_labot', methods=['POST'])
+@app.route('/sacensibas_labot', methods=['GET', 'POST'])
 def sacensibas_labot():
     if 'lietotajvards' in session and session['lietotajvards'] == 'adminlietotajs':
         return sacensibu_saraksts.rediget_sacensibas()
     else:
         return redirect('/login_jasana')
 
-@app.route('/sacensibas_pievienot', methods=['POST'])
+@app.route('/sacensibas_pievienot', methods=['GET', 'POST'])
 def sacensibas_pievienot():
     if 'lietotajvards' in session and session['lietotajvards'] == 'adminlietotajs':
         return sacensibu_saraksts.pievienot_sacensibas()
     else:
         return redirect('/login_jasana')
 
-@app.route('/sacensibas_dzest', methods=['POST'])
+@app.route('/sacensibas_dzest', methods=['GET', 'POST'])
 def sacensibas_dzest():
     if 'lietotajvards' in session and session['lietotajvards'] == 'adminlietotajs':
         return sacensibu_saraksts.izdzest_sacensibas()
@@ -279,6 +344,22 @@ def PDF_dokuments_lietotaji():
 @app.route('/PDF_skolas')
 def PDF_dokuments_skolas():
     return PDF.PDF_dokuments_skolas()
+
+@app.route('/PDF_veikali')
+def PDF_dokuments_veikali():
+    return PDF.PDF_dokuments_veikali()
+
+@app.route('/PDF_pakavu_kaleji')
+def PDF_dokuments_pakavu_kaleji():
+    return PDF.PDF_dokuments_pakavu_kaleji()
+
+@app.route('/PDF_zirgu_veterinararsti')
+def PDF_dokuments_zirgu_veterinararsti():
+    return PDF.PDF_dokuments_zirgu_veterinarsti()
+
+@app.route('/PDF_sacensibas')
+def PDF_dokuments_sacensibas():
+    return PDF.PDF_dokuments_sacensibas()
 
 if __name__ == "__main__":
     socketio.run(app,host="0.0.0.0", port=80, debug=True)
