@@ -35,6 +35,11 @@
               color: black;
               text-decoration: none;
           }
+
+          .btn-group button {
+            margin-right: 10px;
+            margin-bottom: 10px;
+        }
   </style>
   <title>Personalizēts kalendārs</title>
   <script src="https://cdn.jsdelivr.net/npm/fullcalendar@6.1.7/index.global.min.js"></script>
@@ -44,15 +49,23 @@
     {% block content %}
     <div class="calendar-container">
         <div class="btn-group" role="group" aria-label="Add Event">
-            <button type="button" class="btn btn-primary" data-bs-toggle="modal" data-bs-target="#doctorModal">Add New Doctor Appointment</button>
-            <button type="button" class="btn btn-primary" data-bs-toggle="modal" data-bs-target="#trainingModal">Add New Training</button>
-            <button type="button" class="btn btn-primary" data-bs-toggle="modal" data-bs-target="#sacensibaModal">Add New Sacensība</button>
-            <button type="button" class="btn btn-primary" data-bs-toggle="modal" data-bs-target="#pakavu_kalejsModal">Pakavu Kalējs</button>
+            <button type="button" class="btn btn-primary" data-bs-toggle="modal" data-bs-target="#doctorModal">Pievienot jaunu ārsta vizīti</button>
+            <button type="button" class="btn btn-primary" data-bs-toggle="modal" data-bs-target="#trainingModal">Pievienot jaunu treniņu</button>
+            <button type="button" class="btn btn-primary" data-bs-toggle="modal" data-bs-target="#sacensibaModal">Pievienot jaunu piedalīšanos sacensībā</button>
+            <button type="button" class="btn btn-primary" data-bs-toggle="modal" data-bs-target="#pakavu_kalejsModal">Pievienot jaunu tikšanos ar pakavu kalēju</button>
         </div>
-      
+
+        <div class="btn-group" role="group" aria-label="Add Event">
+            <button type="button" class="btn btn-success" id="doctorappointments">Atlasīt tikai ārstu vizītes</button>
+            <button type="button" class="btn btn-success" id="trainingonly">Atlasīt tikai treniņus</button>
+            <button type="button" class="btn btn-success" id="sacensibasonly">Atlasīt tikai sacensības</button>
+            <button type="button" class="btn btn-success" id="pakavu_kalejionly">Atlasīt tikai pakavu kalēju vizītes</button>
+        </div>
         <div id="calendar">
             {% for event in events %}
             <div class="event" 
+                data-id="{{ event['ID'] }}"
+                data-darbibas-veids="{{ event['darbibas_veids'] }}"
                 data-nosaukums="{{ event['nosaukums'] }}" 
                 data-datums_sakums="{{ event['datums_sakums'] }}"
                 data-datums_beigas="{{ event['datums_beigas'] }}"
@@ -66,32 +79,32 @@
             <div class="modal-dialog">
               <div class="modal-content">
                 <div class="modal-header">
-                  <h5 class="modal-title" id="doctorModalLabel">Add New Doctor Appointment</h5>
+                  <h5 class="modal-title" id="doctorModalLabel">Pievienot jaunu ārsta vizīti</h5>
                   <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
                 </div>
                 <div class="modal-body">
                   <form id="doctorForm">
                     <div class="mb-3">
-                      <label for="appointmentName" class="form-label">Appointment Name:</label>
+                      <label for="appointmentName" class="form-label">Vizītes nosaukums:</label>
                       <input type="text" class="form-control" id="appointmentName" name="appointmentName">
                     </div>
                     <div class="mb-3">
-                      <label for="horseSelect" class="form-label">Choose Horse:</label>
+                      <label for="horseSelect" class="form-label">Izvēlieties zirgu:</label>
                       <select class="form-select" id="doctorhorseSelect" name="horseName"></select>
                     </div>
                     <div class="mb-3">
-                      <label for="hospitalSelect" class="form-label">Choose Hospital:</label>
+                      <label for="hospitalSelect" class="form-label">Izvēlieties slimnīcu:</label>
                       <select class="form-select" id="hospitalSelect" name="hospitalName"></select>
                     </div>
                     <div class="mb-3">
-                      <label for="appointmentDate" class="form-label">Choose Date:</label>
+                      <label for="appointmentDate" class="form-label">Izvēlieties sākuma datumu:</label>
                       <input type="date" class="form-control" id="appointmentDateStart" name="appointmentDateStart">
                     </div>
                     <div class="mb-3">
-                        <label for="appointmentDate" class="form-label">Choose Date:</label>
+                        <label for="appointmentDate" class="form-label">Izvēlieties beigu datumu:</label>
                         <input type="date" class="form-control" id="appointmentDateEnd" name="appointmentDateEnd">
                       </div>
-                    <button type="submit" class="btn btn-primary">Save</button>
+                    <button type="submit" class="btn btn-primary">Saglabāt</button>
                   </form>
                 </div>
               </div>
@@ -107,10 +120,13 @@
                 </div>
                 <div class="modal-body">
                     <p><strong>Nosaukums:</strong> <span id="modalTitle"></span></p>
-                    <p><strong>Start Date:</strong> <span id="modalStartDate"></span></p>
-                    <p><strong>End Date:</strong> <span id="modalEndDate"></span></p>
+                    <p><strong>Sākuma Datums:</strong> <span id="modalStartDate"></span></p>
+                    <p><strong>Beigu Datums:</strong> <span id="modalEndDate"></span></p>
                     <p><strong>Iestāde:</strong> <span id="modalIestade"></span></p>
-                    <p><strong>Ieraksts:</strong> <span id="modalIeraksts"></span></p>
+                    <p><strong>Zirgs:</strong> <span id="modalIeraksts"></span></p>
+                </div>
+                <div class="modal-footer">
+                    <button type="button" class="btn btn-danger" id="deleteButton">Izdzēst</button>
                 </div>
             </div>
         </div>
@@ -145,7 +161,7 @@
                         <label for="trainingDate" class="form-label">Izvēlieties beigu datumu:</label>
                         <input type="date" class="form-control" id="trainingDateend" name="trainingDate">
                       </div>
-                      <button type="submit" class="btn btn-primary">Save</button>
+                      <button type="submit" class="btn btn-primary">Saglabāt</button>
                     </form>
                   </div>
             </div>
@@ -156,7 +172,7 @@
         <div class="modal-dialog">
             <div class="modal-content">
                 <div class="modal-header">
-                    <h5 class="modal-title" id="sacensibaModalLabel">Pievienot jaunu sacensību</h5>
+                    <h5 class="modal-title" id="sacensibaModalLabel">Pievienot jaunu piedalīšanos sacensībā</h5>
                     <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
                   </div>
                   <div class="modal-body">
@@ -173,7 +189,7 @@
                         <label for="sacensibuSelect" class="form-label">Izvēlieties sacensību:</label>
                         <select class="form-select" id="sacensibasSelect" name="sacensibasName"></select>
                       </div>
-                      <button type="submit" class="btn btn-primary">Save</button>
+                      <button type="submit" class="btn btn-primary">Saglabāt</button>
                     </form>
                   </div>
             </div>
@@ -184,13 +200,13 @@
         <div class="modal-dialog">
             <div class="modal-content">
                 <div class="modal-header">
-                    <h5 class="modal-title" id="pakavu_kalejsModalLabel">Pievienot jaunu pakavu kalejs</h5>
+                    <h5 class="modal-title" id="pakavu_kalejsModalLabel">Pievienot jaunu tikšanos ar pakavu kalēju</h5>
                     <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
                   </div>
                   <div class="modal-body">
                     <form id="pakavu_kalejiForm">
                       <div class="mb-3">
-                        <label for="pakavu_kalejiName" class="form-label">pakavu kalejs nosaukums:</label>
+                        <label for="pakavu_kalejiName" class="form-label">Pakavu kalēja tikšanās nosaukums:</label>
                         <input type="text" class="form-control" id="pakavu_kalejinosaukums" name="pakavu_kalejinosaukums">
                       </div>
                       <div class="mb-3">
@@ -209,7 +225,7 @@
                         <label for="pakavu_kalejiDate" class="form-label">Izvēlieties beigu datumu:</label>
                         <input type="date" class="form-control" id="pakavu_kalejiDateend" name="pakavu_kalejiDate">
                       </div>
-                      <button type="submit" class="btn btn-primary">Save</button>
+                      <button type="submit" class="btn btn-primary">Saglabāt</button>
                     </form>
                   </div>
             </div>
@@ -223,6 +239,8 @@
             const eventElements = document.getElementsByClassName('event');
             for (let i = 0; i < eventElements.length; i++) {
                 let eventElement = eventElements[i];
+                let eventId = eventElement.dataset.id;
+                let darbibas_veids = eventElement.dataset.darbibas_veids;
                 let nosaukums = eventElement.dataset.nosaukums;
                 let dateStart = eventElement.dataset.datums_sakums;
                 let dateEnd = eventElement.dataset.datums_beigas;
@@ -237,7 +255,9 @@
                         extendedProps:{
                             iestade : iestade,
                             ieraksts : ieraksts,
-                        }
+                        },
+                        id: eventId,
+                        darbibas_veids: darbibas_veids,
                     };
                     events.push(event);
                     }
@@ -245,30 +265,79 @@
 
             let calendar = new FullCalendar.Calendar(calendarEl, {
                 events: events,
+                locale: 'lv',
                 eventClick: function (info) {
+
                     let eventTitle = info.event.title;
                     let eventStartDate = info.event.start;
                     let eventEndDate = info.event.end;
                     let eventIestade = info.event.extendedProps.iestade;
                     let eventIeraksts = info.event.extendedProps.ieraksts;
+                    let eventId = info.event.id;
+                    let eventdarbibas_veids = info.event.darbibas_veids; 
+                    let event = info.event;
 
+                    let modal = new bootstrap.Modal(document.getElementById('eventModal'));
                     let modalTitle = document.getElementById('modalTitle');
                     let modalStartDate = document.getElementById('modalStartDate');
                     let modalEndDate = document.getElementById('modalEndDate');
                     let modalIestade = document.getElementById('modalIestade');
                     let modalIeraksts = document.getElementById('modalIeraksts');
+                    let deleteButton = document.getElementById('deleteButton');
 
-                    modalTitle.textContent = eventTitle;
-                    modalStartDate.textContent = eventStartDate;
-                    modalEndDate.textContent = eventEndDate;
-                    modalIestade.textContent = eventIestade;
-                    modalIeraksts.textContent = eventIeraksts;
 
-                    let eventModal = document.getElementById('eventModal');
-                    eventModal.classList.add('show');
-                    eventModal.style.display = 'block';
-                },
+                    modalTitle.textContent = event.title;
+                    modalIestade.textContent = event.extendedProps.iestade;
+                    modalIeraksts.textContent = event.extendedProps.ieraksts;
+                    deleteButton.dataset.eventId = event.id;
+                    if (eventStartDate && eventEndDate) {
+                        let formattedStartDate = eventStartDate.toISOString().split('T')[0];
+                        let formattedEndDate = eventEndDate.toISOString().split('T')[0];
+
+                        modalStartDate.textContent = formattedStartDate;
+                        modalEndDate.textContent = formattedEndDate;
+                    } else {
+                        let formattedStartDate = eventStartDate.toISOString().split('T')[0];
+                        modalStartDate.textContent = formattedStartDate;
+                        modalEndDate.textContent = formattedStartDate;
+                        }
+
+
+                    deleteButton.dataset.eventId = eventId;
+                    deleteButton.addEventListener('click', function () {
+                        deleteEvent(eventId);
+                    });
+
+                    deleteButton.addEventListener('click', function () {
+                    let eventId = event.id;
+
+                    function deleteEvent(eventId) {
+                    fetch('/deleteEvent', {
+                        method: 'POST',
+                        headers: {
+                            'Content-Type': 'application/json'
+                        },
+                        body: JSON.stringify({ eventId: eventId })
+                    })
+                    .then(function(response) {
+                        if (response.ok) {
+                            location.reload();
+                            console.log("Deleting event with ID:", eventId);
+                        } else {
+                            console.error('Failed to delete event');
+                        }
+                    })
+                    .catch(function(error) {
+                        console.error('Failed to delete event:', error);
+                    });
+                }
+
+                deleteEvent(eventId);
             });
+
+            modal.show();
+        }
+                });
 
             const eventModal = document.getElementById('eventModal');
             const modalCloseButton = eventModal.querySelector('.btn-close');
@@ -344,6 +413,7 @@
                 })
                 .then(response => response.json())
                 .then(data => {
+                    location.reload();
                     console.log('Appointment saved:', data);
                 })
                 .catch(error => {
@@ -415,6 +485,7 @@
                 })
                     .then(response => response.json())
                     .then(data => {
+                        location.reload();
                         console.log('Appointment saved:', data);
                         calendar.refetchEvents();
                     })
@@ -484,6 +555,7 @@
                     })
                         .then(response => response.json())
                         .then(data => {
+                            location.reload();
                             console.log('Appointment saved:', data);
                             calendar.refetchEvents();
                         })
@@ -533,7 +605,7 @@
                     const darbibas_veids = 'Pakavu kalēji';
                     const pakavu_kalejinosaukums = pakavu_kalejiInput.value;
                     const iestade = pakavu_kalejiSelect.value;
-                    const ieraksts = horseSelect.options[sacensibashorseSelect.selectedIndex].text;
+                    const ieraksts = horseSelect.options[pakavu_kalejihorseSelect.selectedIndex].text;
                     const pakavu_kalejiStartDate = pakavu_kalejiStartDateInput.value;
                     const pakavu_kalejiEndDate = pakavu_kalejiEndDateInput.value;
 
@@ -556,6 +628,7 @@
                     })
                         .then(response => response.json())
                         .then(data => {
+                            location.reload();
                             console.log('Appointment saved:', data);
                             calendar.refetchEvents();
                         })
@@ -563,6 +636,57 @@
                             console.log('Error:', error);
                         });
                 });
+
+                document.getElementById('doctorappointments').addEventListener('click', function () {
+                    calendar.getEvents().forEach(function (event) {
+
+                    let darbibas_veids = event.extendedProps.darbibas_veids;
+                
+                    if (darbibas_veids  === 'Veterinārārsts') {
+                        event.setProp('display', '');
+                    } else {
+                        event.setProp('display', 'none');
+                    }
+                    });
+                });
+
+                document.getElementById('trainingonly').addEventListener('click', function () {
+                    calendar.getEvents().forEach(function (event) {
+                    let darbibas_veids = event.extendedProps.darbibas_veids;
+                
+                    if (darbibas_veids  === 'Treniņš') {
+                        event.setProp('display', 'auto');
+                    } else {
+                        event.setProp('display', 'none');
+                    }
+                    });
+                });
+
+                document.getElementById('sacensibasonly').addEventListener('click', function () {
+                    calendar.getEvents().forEach(function (event) {
+                    let darbibas_veids = event.extendedProps.darbibas_veids.toLowerCase();
+                
+                    if (darbibas_veids  === 'Sacensība') {
+                        event.setProp('display', 'auto');
+                    } else {
+                        event.setProp('display', 'none');
+                    }
+                    });
+                });
+                
+                document.getElementById('pakavu_kalejionly').addEventListener('click', function () {
+                    calendar.getEvents().forEach(function (event) {
+                        
+                    let darbibas_veids = event.extendedProps.darbibas_veids.toLowerCase();
+                
+                    if (darbibas_veids  === 'Pakavu kalēji') {
+                        event.setProp('display', 'auto');
+                    } else {
+                        event.setProp('display', 'none');
+                    }
+                    });
+                });
+
           calendar.render();
       });
     </script>

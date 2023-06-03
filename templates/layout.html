@@ -17,11 +17,6 @@
             <a class="nav-link dropdown-toggle" href="#" role="button" data-bs-toggle="dropdown" aria-expanded="false">
               Jātnieku un zirgu ērtības
             </a>
-            {% if loggedin %}
-            <li class="nav-item">
-              <a class="nav-link" href="{{ url_for('personalizets_grafiks') }}">Personalizēts Grafiks</a>
-            </li>
-            {% endif %}
             <ul class="dropdown-menu">
               <li><a class="dropdown-item" href="{{ url_for('skolas') }}">Skolas</a></li>
               <li><a class="dropdown-item" href="{{ url_for('veikali') }}">Jāšanas ekipējumu veikali</a></li>
@@ -29,6 +24,11 @@
               <li><a class="dropdown-item" href="{{ url_for('arsti') }}">Zirgu veterinārārsti</a></li>
             </ul>
           </li>
+          {% if loggedin %}
+          <li class="nav-item">
+            <a class="nav-link" href="{{ url_for('personalizets_grafiks') }}">Personalizēts Grafiks</a>
+          </li>
+          {% endif %}
         </ul>
         {% if loggedin %}
         <form class="d-flex" role="search">

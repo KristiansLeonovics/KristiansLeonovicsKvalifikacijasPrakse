@@ -13,6 +13,7 @@ import backend.sacensibu_saraksts as sacensibu_saraksts
 import backend.pakavu_kaleji_saraksts as pakavu_kaleji_saraksts
 import backend.zirgu_veterinararsti_saraksts as zirgu_veterinararsti_saraksts
 import backend.veikali_saraksts as veikali_saraksts
+import backend.jaunumi_saraksts as jaunumi_saraksts
 import backend.zirgu_pievienosana as zirgu_pievienosana
 import backend.personalizets_grafiks as grafiks
 from backend.register import register_jasana
@@ -29,7 +30,10 @@ app.config['MYSQL_DB'] = 'jasanassistema'
 mysql = MySQL(app)
 @app.route('/')
 def home():
-    return render_template('mainpage.html', loggedin=session.get('loggedin', False))
+    cursor = mysql.connection.cursor(MySQLdb.cursors.DictCursor)
+    cursor.execute("SELECT * FROM jaunumi") 
+    db = cursor.fetchall()
+    return render_template('mainpage.html', jaunumilist = db, loggedin=session.get('loggedin', False))
 
 @app.route('/skola', methods=['GET', 'POST'])
 def skolas():
@@ -92,9 +96,9 @@ def pakavu_kaleji_personalizets_grafiks():
 def sacensibas_personalizets_grafiks():
     return grafiks.get_sacensibas()
 
-@app.route('/deleteEvent', methods=['DELETE'])
+@app.route('/deleteEvent', methods=['POST'])
 def delete_personalizets_grafiks():
-    return grafiks.deleteevent()
+    return grafiks.delete_event()
 
 @app.route('/save_appointment_horses', methods=['POST'])
 def save_appointment_horse():
@@ -334,6 +338,38 @@ def sacensibas_pievienot():
 def sacensibas_dzest():
     if 'lietotajvards' in session and session['lietotajvards'] == 'adminlietotajs':
         return sacensibu_saraksts.izdzest_sacensibas()
+    else:
+        return redirect('/login_jasana')
+    
+# Jaunumu funkcijas
+@app.route('/jaunumu_saraksts', methods=['GET', 'POST'])
+def jaunumu_saraksts():
+    if 'lietotajvards' in session and session['lietotajvards'] == 'adminlietotajs':
+        cursor = mysql.connection.cursor(MySQLdb.cursors.DictCursor)
+        cursor.execute("SELECT * FROM jaunumi") 
+        datubaze = cursor.fetchall()
+        return render_template('/admin/jaunumu_saraksts.html', datubaze = datubaze, loggedin=session.get('loggedin', False))
+    else:
+        return redirect('/login_jasana', loggedin=session.get('loggedin', False))
+
+@app.route('/jaunumi_labot', methods=['GET', 'POST'])
+def jaunumi_labot():
+    if session['lietotajvards'] == 'adminlietotajs':
+        return jaunumi_saraksts.rediget_jaunumi()
+    else:
+        return redirect('/login_jasana')
+
+@app.route('/jaunumi_pievienot', methods=['GET', 'POST'])
+def jaunumi_pievienot():
+    if 'lietotajvards' in session and session['lietotajvards'] == 'adminlietotajs':
+        return jaunumi_saraksts.pievienot_jaunumus()
+    else:
+        return redirect('/login_jasana')
+    
+@app.route('/jaunumi_dzest', methods=['GET', 'POST'])
+def jaunumi_dzest():
+    if 'lietotajvards' in session and session['lietotajvards'] == 'adminlietotajs':
+        return jaunumi_saraksts.izdzest_jaunumus()
     else:
         return redirect('/login_jasana')
 
