@@ -120,10 +120,10 @@ def save_appointment_pakavu_kaleji():
 
     return jsonify({'message': 'Appointment saved successfully!'})
 
-def deleteevent():
+def delete_event():
     cursor = mysql.connection.cursor(MySQLdb.cursors.DictCursor)
     data = request.get_json()
-    eventid = data['eventid']
-    cursor.execute("DELETE FROM lietotaju_darbibas WHERE ID = %s", [eventid])
+    event_id = data.get('eventId')
+    cursor.execute("DELETE FROM lietotaju_darbibas WHERE ID = %s", [event_id])
     mysql.connection.commit()
     return jsonify({'message': 'Event deleted successfully'})
