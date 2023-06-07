@@ -19,12 +19,15 @@ def login_jasana():
             session['ID'] = account['ID']
             session['lietotajvards'] = account['lietotajvards']
             loggedin = True
+            cursor = mysql.connection.cursor(MySQLdb.cursors.DictCursor)
+            cursor.execute("SELECT * FROM jaunumi") 
+            db = cursor.fetchall()
 
             if account['lietotajvards'] == 'adminlietotajs' and account['parole'] == 'adminparole123':
                 is_admin = True
-                return render_template('/admin/amainpage.html',is_admin=is_admin, loggedin=loggedin)
+                return render_template('/admin/amainpage.html',jaunumilist = db, is_admin=is_admin, loggedin=loggedin)
             else:
-                return render_template('mainpage.html', loggedin=loggedin)
+                return render_template('mainpage.html', jaunumilist = db, loggedin=loggedin)
         else:
             msg = 'Nepareizi ievadīts lietotājvārds vai parole!'
 

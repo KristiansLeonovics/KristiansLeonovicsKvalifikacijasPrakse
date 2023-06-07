@@ -24,13 +24,13 @@ def pievienot_jaunumus():
     return redirect(url_for('jaunumu_saraksts'))
 
 def rediget_jaunumi():
-    if request.method == 'POST' and 'virsraksts' in request.form and 'jaunais_virsraksts' in request.form and 'teksts' in request.form:
+    if request.method == 'POST' and 'ID' in request.form and 'jaunais_virsraksts' in request.form and 'teksts' in request.form:
         cursor = mysql.connection.cursor(MySQLdb.cursors.DictCursor)
-        virsraksts = request.form['virsraksts']
+        ID= request.form['ID']
         jaunais_virsraksts = request.form['jaunais_virsraksts']
         teksts= request.form['teksts']
 
-        cursor.execute("SELECT * FROM jaunumi WHERE virsraksts = %s", (virsraksts,))
+        cursor.execute("SELECT * FROM jaunumi WHERE ID = %s", (ID,))
         datubazes_dati = cursor.fetchone()
 
         if datubazes_dati:
@@ -39,7 +39,7 @@ def rediget_jaunumi():
             if teksts:
                 datubazes_dati['teksts'] = teksts
 
-            cursor.execute("UPDATE jaunumi SET virsraksts = %s, teksts= %s WHERE virsraksts = %s", (datubazes_dati['virsraksts'], datubazes_dati['teksts'], virsraksts,))
+            cursor.execute("UPDATE jaunumi SET virsraksts = %s, teksts= %s WHERE ID = %s", (datubazes_dati['virsraksts'], datubazes_dati['teksts'], ID,))
             mysql.connection.commit()
 
         return redirect(url_for('jaunumu_saraksts'))

@@ -32,8 +32,8 @@
           <div class="card-body">
             <form action="{{ url_for('jaunumi_labot') }}" method="post">
               <div class="mb-3">
-                <label for="exampleInputEmail1" class="form-label">Virsraksts</label>
-                <input type="text" name="virsraksts" placeholder="Ievadiet jaunuma virsrakstu" id="virsraksts" class="form-control" aria-describedby="emailHelp" required>
+                <label for="exampleInputEmail1" class="form-label">ID</label>
+                <input type="text" name="ID" placeholder="Ievadiet jaunuma ID" id="ID" class="form-control" aria-describedby="emailHelp" required>
               </div>
               <div class="mb-3">
                 <label for="exampleInputEmail1" class="form-label">Jaunais virsraksts</label>
@@ -84,6 +84,24 @@
           </div>
         </div>
       </div>
+      <div class="col possition_control">
+        <div class="card">
+          <div class="card-header">
+            <h4>Filtrēt pēc Virsraksta</h4>
+          </div>
+          <div class="card-body">
+            <form>
+              <div class="mb-3">
+                <label for="filter-virsraksts" class="form-label">Virsraksts</label>
+                <input type="text" id="filter-virsraksts" class="form-control" aria-describedby="emailHelp">
+              </div>
+
+              <button type="button" class="btn btn-secondary bg-primary" onclick="filterTable()">Filtrēt</button>
+              <button type="button" class="btn btn-secondary" onclick="resetTable()">Atiestatīt</button>
+            </form>
+          </div>
+        </div>
+      </div>
     </div>
   </div>
 
@@ -110,10 +128,42 @@
         </tbody>
       </table>
       <div class="text-center mt-3">
-        <a class="btn btn-primary" href="{{ url_for('PDF_dokuments_skolas') }}" target="_blank">Print as PDF</a>
+        <a class="btn btn-primary" href="{{ url_for('PDF_dokuments_jaunums') }}" target="_blank">Saglabāt kā PDF dokumentu</a>
       </div>      
     </div>
   </div>
 </body>
+
+<script>
+    function filterTable() {
+      var input = document.getElementById("filter-virsraksts").value.toLowerCase();
+      var table = document.getElementById("table");
+      var rows = table.getElementsByTagName("tr");
+
+      for (var i = 0; i < rows.length; i++) {
+        var cell = rows[i].getElementsByTagName("td")[1];
+
+        if (cell) {
+          var text = cell.textContent.toLowerCase();
+
+          if (text.includes(input)) {
+            rows[i].style.display = "";
+          } else {
+            rows[i].style.display = "none";
+          }
+        }
+      }
+    }
+
+    function resetTable() {
+      var table = document.getElementById("table");
+      var rows = table.getElementsByTagName("tr");
+
+      for (var i = 0; i < rows.length; i++) {
+        rows[i].style.display = "";
+      }
+    }
+</script>
+
 </html>
   {% endblock %}

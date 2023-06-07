@@ -54,13 +54,10 @@
             <button type="button" class="btn btn-primary" data-bs-toggle="modal" data-bs-target="#sacensibaModal">Pievienot jaunu piedalīšanos sacensībā</button>
             <button type="button" class="btn btn-primary" data-bs-toggle="modal" data-bs-target="#pakavu_kalejsModal">Pievienot jaunu tikšanos ar pakavu kalēju</button>
         </div>
-
         <div class="btn-group" role="group" aria-label="Add Event">
-            <button type="button" class="btn btn-success" id="doctorappointments">Atlasīt tikai ārstu vizītes</button>
-            <button type="button" class="btn btn-success" id="trainingonly">Atlasīt tikai treniņus</button>
-            <button type="button" class="btn btn-success" id="sacensibasonly">Atlasīt tikai sacensības</button>
-            <button type="button" class="btn btn-success" id="pakavu_kalejionly">Atlasīt tikai pakavu kalēju vizītes</button>
+            <a type="button" class="btn btn-success" id="generatePDFButtonss" href="{{ url_for('PDF_personalizets_grafiks_lietotaji') }}">PDF dokuments visiem kalendāra ierakstiem</a>
         </div>
+        
         <div id="calendar">
             {% for event in events %}
             <div class="event" 
@@ -274,7 +271,7 @@
                     let eventIestade = info.event.extendedProps.iestade;
                     let eventIeraksts = info.event.extendedProps.ieraksts;
                     let eventId = info.event.id;
-                    let eventdarbibas_veids = info.event.darbibas_veids; 
+                    let darbibas_veids = info.event.darbibas_veids; 
                     let event = info.event;
 
                     let modal = new bootstrap.Modal(document.getElementById('eventModal'));
@@ -345,7 +342,6 @@
                 eventModal.classList.remove('show');
                 eventModal.style.display = 'none';
             });
-
 
             fetch('/get_horses')
               .then(response => response.json())
@@ -635,56 +631,6 @@
                         .catch(error => {
                             console.log('Error:', error);
                         });
-                });
-
-                document.getElementById('doctorappointments').addEventListener('click', function () {
-                    calendar.getEvents().forEach(function (event) {
-
-                    let darbibas_veids = event.extendedProps.darbibas_veids;
-                
-                    if (darbibas_veids  === 'Veterinārārsts') {
-                        event.setProp('display', '');
-                    } else {
-                        event.setProp('display', 'none');
-                    }
-                    });
-                });
-
-                document.getElementById('trainingonly').addEventListener('click', function () {
-                    calendar.getEvents().forEach(function (event) {
-                    let darbibas_veids = event.extendedProps.darbibas_veids;
-                
-                    if (darbibas_veids  === 'Treniņš') {
-                        event.setProp('display', 'auto');
-                    } else {
-                        event.setProp('display', 'none');
-                    }
-                    });
-                });
-
-                document.getElementById('sacensibasonly').addEventListener('click', function () {
-                    calendar.getEvents().forEach(function (event) {
-                    let darbibas_veids = event.extendedProps.darbibas_veids.toLowerCase();
-                
-                    if (darbibas_veids  === 'Sacensība') {
-                        event.setProp('display', 'auto');
-                    } else {
-                        event.setProp('display', 'none');
-                    }
-                    });
-                });
-                
-                document.getElementById('pakavu_kalejionly').addEventListener('click', function () {
-                    calendar.getEvents().forEach(function (event) {
-                        
-                    let darbibas_veids = event.extendedProps.darbibas_veids.toLowerCase();
-                
-                    if (darbibas_veids  === 'Pakavu kalēji') {
-                        event.setProp('display', 'auto');
-                    } else {
-                        event.setProp('display', 'none');
-                    }
-                    });
                 });
 
           calendar.render();

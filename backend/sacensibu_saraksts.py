@@ -27,16 +27,16 @@ def pievienot_sacensibas():
     return redirect(url_for('sacensibas_saraksts'))
 
 def rediget_sacensibas():
-    if request.method == 'POST' and 'nosaukums' in request.form and 'jaunais_nosaukums' in request.form and 'atrasanasvieta' in request.form and 'datums_sakums' in request.form and 'datums_beigas' in request.form and 'jasanas_norises_vieta' in request.form:
+    if request.method == 'POST' and 'ID' in request.form and 'jaunais_nosaukums' in request.form and 'atrasanasvieta' in request.form and 'datums_sakums' in request.form and 'datums_beigas' in request.form and 'jasanas_norises_vieta' in request.form:
         cursor = mysql.connection.cursor(MySQLdb.cursors.DictCursor)
-        nosaukums = request.form['nosaukums']
+        ID = request.form['ID']
         jaunais_nosaukums = request.form['jaunais_nosaukums']
         atrasanasvieta = request.form['atrasanasvieta']
         datums_sakums = request.form['datums_sakums']
         datums_beigas = request.form['datums_beigas']
         jasanas_norises_vieta = request.form['jasanas_norises_vieta']
 
-        cursor.execute("SELECT * FROM sacensibas WHERE nosaukums = %s", (nosaukums,))
+        cursor.execute("SELECT * FROM sacensibas WHERE ID = %s", (ID,))
         datubazes_dati = cursor.fetchone()
 
         if datubazes_dati:
@@ -51,7 +51,7 @@ def rediget_sacensibas():
             if jasanas_norises_vieta:
                 datubazes_dati['jasanas_norises_vieta'] = jasanas_norises_vieta
 
-            cursor.execute("UPDATE sacensibas SET nosaukums = %s, atrasanas_vieta = %s, datums_sakums = %s, datums_beigas = %s, jasanas_norises_vieta = %s WHERE nosaukums = %s", (datubazes_dati['nosaukums'], datubazes_dati['atrasanas_vieta'], datubazes_dati['datums_sakums'], datubazes_dati['datums_beigas'], datubazes_dati['jasanas_norises_vieta'], nosaukums,))
+            cursor.execute("UPDATE sacensibas SET nosaukums = %s, atrasanas_vieta = %s, datums_sakums = %s, datums_beigas = %s, jasanas_norises_vieta = %s WHERE ID = %s", (datubazes_dati['nosaukums'], datubazes_dati['atrasanas_vieta'], datubazes_dati['datums_sakums'], datubazes_dati['datums_beigas'], datubazes_dati['jasanas_norises_vieta'], ID,))
             mysql.connection.commit()
 
         return redirect(url_for('sacensibas_saraksts'))
