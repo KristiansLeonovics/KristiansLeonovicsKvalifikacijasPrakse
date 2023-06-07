@@ -10,41 +10,184 @@
     <title>Horsify</title>
 </head>
 <style>
-    .block {
-      padding-top: 20px;
-      background-color: white;
-      border-radius: 10px;
-    }
-  </style>
+  body {
+    background-image: url("/static/6.jpg");
+    font-family: Arial, sans-serif;
+    color: #333;
+    background-repeat: no-repeat;
+    background-size: cover;
+  }
+  
+  .block {
+    padding: 20px;
+    border-radius: 10px;
+    background-color: #fff;
+    margin-bottom: 20px;
+    box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+  }
+  
+  .block h5 {
+    margin-top: 0;
+    font-size: 24px;
+  }
+  
+  .block p {
+    margin-bottom: 0;
+    line-height: 1.5;
+  }
+  
+  .btn-primary {
+    background-color: #007bff;
+    border-color: #007bff;
+    transition: background-color 0.3s ease;
+  }
+  
+  .btn-primary:hover {
+    background-color: #0056b3;
+    border-color: #0056b3;
+  }
+  
+  .news-image {
+    width: 100%;
+    max-height: 400px;
+    object-fit: cover;
+    border-radius: 10px;
+  }
+  
+  .news-title {
+    font-size: 20px;
+    font-weight: bold;
+  }
+  
+  .container {
+    max-width: 900px;
+    margin: 0 auto;
+    padding: 20px;
+  }
+</style>
+</head>
 <body>
   {% extends 'layout.html' %}
 
   {% block content %}
-
-      <div class="block">
-      <div class="row g-0 bg-body-secondary position-relative">
-      <div class="col-md-6 p-4 ps-md-0 d-flex flex-column justify-content-center align-items-center">
-        <h5 class="mt-0">Jaunumi</h5>
-        <p class="text-center">Apskaties jaunumus jāšanas sportā un ap to saistītām lietām! Klikšķiniet uz pogas lejā, lai dotos pie jaunumiem</p>
-        <a href="#" class="btn btn-success">Jaunumi</a>
+  <div class="container">
+    <div class="block">
+      <div class="row g-0 bg-light position-relative row-g-0">
+        <div class="col-md-6 p-4 ps-md-0 column">
+          <h5 class="mt-0">Jaunumi</h5>
+          <p class="text-center">Apskaties jaunumus jāšanas sportā un ap to saistītām lietām! Klikšķiniet uz pogas lejā, lai dotos pie jaunumiem.</p>
+          <a href="#jaunumi-section" class="btn btn-primary">Jaunumi</a>
+        </div>
+        <div class="col-md-6 p-md-4">
+          <img src="/static/1.jpg" class="news-image" alt="Jaunumu bilde">
+        </div>
       </div>
-      <div class="col-md-6 mb-md-0 p-md-4">
-        <img src="/static/1.jpg" class="w-100" alt="..." style="max-height: 400px;">
-      </div>
+    </div>
+  
+    <div class="block">
+      <div class="row g-0 bg-light position-relative row-g-0">
+        <div class="col-md-6 p-4 ps-md-0 column">
+          <h5 class="mt-0">Latvijas un ārzemju jāšanas sacensību saraksti</h5>
+          <p class="text-center">Ja Jūs vēlaties apskatīties ne tikai Latvijas, bet arī ārzemju jāšanas sacensību grafikus, to atrašanās vieta, datumus un nosaukumus, dodieties uz Latvijas un ārzemju jāšanas sacensību sarakstu, kas atrodas navigācijas joslā vai arī poga zem šī teksta</p>
+          <a href="{{ url_for('sacensibas') }}" class="btn btn-primary">Latvijas un ārzemju jāšanas sacensību grafiki</a>
+        </div>
+        <div class="col-md-6 p-md-4">
+          <img src="/static/3.png" class="news-image" alt="Image for Another Block">
+        </div>
       </div>
     </div>
 
-    <h1 class="mt-4 mb-3">Jaunumi</h1>
+    <div class="block">
+      <div class="row g-0 bg-light position-relative row-g-0">
+        <div class="col-md-6 p-4 ps-md-0 column">
+          <h5 class="mt-0">Personalizēts grafiks</h5>
+          <p class="text-center">Ja Jūs vēlaties izveidot savu personalizētu grafiku jeb kalendāru, kurā var apskatīties un izveidot savus treniņus, sacensības, pakavu kalēju un zirgu veterinārārstu vizītes, tās apskatīt, dzēst, pievienot savus zirgus pie aktivitātēm, tad dodieties uz Personalizētu grafiku, kurš atrodas navigācijas joslā (ja jūs esat autorizējies sistēmā) vai nospiediet uz pogas, kura atrodas zem šī teksta</p>
+          <a href="{{ url_for('personalizets_grafiks') }}" class="btn btn-primary">Personalizēts grafiks</a>
+        </div>
+        <div class="col-md-6 p-md-4">
+          <img src="/static/4..jpg" class="news-image" alt="Image for Another Block">
+        </div>
       </div>
-      {% for jaunumi in jaunumilist %}
-      <div class="block">
-      <div class="row g-0 bg-body-secondary position-relative">
-        <div class="col-md-6 p-4 ps-md-0">
-          <h5 class="mt-0" style="padding-left: 10px;">{{ jaunumi.virsraksts }}</h5>
-          <p style="padding-left: 10px;">{{ jaunumi.teksts }}</p>
+    </div>
+
+    <div class="block">
+      <div class="row g-0 bg-light position-relative row-g-0">
+        <div class="col-md-6 p-4 ps-md-0 column">
+          <h5 class="mt-0">Profils un zirgi</h5>
+          <p class="text-center">Ja Jūs vēlaties apskatīt savu lietotāja informāciju, pievienot un apskatīt zirgus, tad dodieties uz Profils un Zirgi sadaļu, kurā Jūs to varēsiet izdarīt! Jūs varat tur nokļūt, noklikšķinot pogu vai nu uz navigācijas joslas (ja Jūs esat autorizējies) vai noklikšķinot uz pogas zem šī teksta!</p>
+          <a href="{{ url_for('profile') }}" class="btn btn-primary">Profils un zirgi</a>
         </div>
+        <div class="col-md-6 p-md-4">
+          <img src="/static/5.jpg" class="news-image" alt="Image for Another Block">
         </div>
-      {% endfor %}
+      </div>
+    </div>
+
+    <div class="block">
+      <div class="row g-0 bg-light position-relative row-g-0">
+        <div class="col-md-6 p-4 ps-md-0 column">
+          <h5 class="mt-0">Jātnieku ērtības - skolas</h5>
+          <p class="text-center">Ja jūs vēlaties apskatīties skolas, to nosaukumus, atrašanās vietas, darba laikus, WEBadreses un/vai telefona numurus, tad Jūs varat doties uz Jātnieku un zirgu ērtības pogu, kura atvērs izvēles logu, tad izvēlaties izvēlni Skolas! Poga atrodas navigācijas joslā vai arī var noklikšķināt pogu zem šī teksta!</p>
+          <a href="{{ url_for('skolas') }}" class="btn btn-primary">Skolas</a>
+        </div>
+        <div class="col-md-6 p-md-4">
+          <img src="/static/6.jpg" class="news-image" alt="Image for Another Block">
+        </div>
+      </div>
+    </div>
+
+    <div class="block">
+      <div class="row g-0 bg-light position-relative row-g-0">
+        <div class="col-md-6 p-4 ps-md-0 column">
+          <h5 class="mt-0">Jātnieku ērtības - Jāšanas ekipējuma veikali</h5>
+          <p class="text-center">Ja Jūs vēlaties apskatīties jāšanas ekipējuma veikalus, to nosaukumus, atrašanās vietas, darba laikus, WEBadreses un/vai telefona numurus, tad Jūs varat doties uz Jātnieku un zirgu ērtības pogu, kura atvērs izvēles logu, tad izvēlaties izvēlni Jāšanas ekipējuma veikali! Vai arī noklikšķiniet uz pogas zem šī teksta!</p>
+          <a href="{{ url_for('veikali') }}" class="btn btn-primary">Jāšanas ekipējuma veikali</a>
+        </div>
+        <div class="col-md-6 p-md-4">
+          <img src="/static/7.jpg" class="news-image" alt="Image for Another Block">
+        </div>
+      </div>
+    </div>
+
+    <div class="block">
+      <div class="row g-0 bg-light position-relative row-g-0">
+        <div class="col-md-6 p-4 ps-md-0 column">
+          <h5 class="mt-0">Jātnieku ērtības - Pakavu kalēji</h5>
+          <p class="text-center">Ja Jūs vēlaties apskatīties pakavu kalējus, to nosaukumus, atrašanās vietas, darba laikus, WEBadreses un/vai telefona numurs, tad Jūs varat doties uz Jātnieku un zirgu ērtības pogu, kura atvērs izvēles logu, tad izvēlaties izvēlni Pakavu kalējus! Vai arī noklikšķiniet uz pogas zem šī teksta!</p>
+          <a href="{{ url_for('kaleji') }}" class="btn btn-primary">Pakavu kalēji</a>
+        </div>
+        <div class="col-md-6 p-md-4">
+          <img src="/static/8.jpg" class="news-image" alt="Image for Another Block">
+        </div>
+      </div>
+    </div>
+
+    <div class="block">
+      <div class="row g-0 bg-light position-relative row-g-0">
+        <div class="col-md-6 p-4 ps-md-0 column">
+          <h5 class="mt-0">Jātnieku ērtības - Zirgu veterinārārsti</h5>
+          <p class="text-center">Ja Jūs vēlaties apskatīties zirgu veterinārārstus, to nosaukumus, atrašanās vietas, darba laikus, WEBadreses un/vai telefona numurs, tad Jūs varat doties uz Jātnieku un zirgu ērtības pogu, kura atvērs izvēles logu, tad izvēlaties izvēlni Zirgu veterinārārsti! Vai arī noklikšķiniet uz pogas zem šī teksta!</p>
+          <a href="{{ url_for('arsti') }}" class="btn btn-primary">Zirgu veterinārārsti</a>
+        </div>
+        <div class="col-md-6 p-md-4">
+          <img src="/static/1.jpg" class="news-image" alt="Image for Another Block">
+        </div>
+      </div>
+    </div>
+
+
+    <h1 id="jaunumi-section" class="mt-4 mb-3" style="color:white;">Jaunumi</h1>
+    {% for jaunumi in jaunumilist %}
+    <div class="block">
+      <div class="row g-0 bg-light position-relative row-g-0">
+        <div class="col-md-12 p-4 ps-md-0 column">
+          <h5 class="mt-0 news-title">{{ jaunumi.virsraksts }}</h5>
+          <p>{{ jaunumi.teksts }}</p>
+        </div>
+      </div>
+    </div>
+    {% endfor %}
+  </div>
 </body>
 </html>
 

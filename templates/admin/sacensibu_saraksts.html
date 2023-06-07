@@ -32,8 +32,8 @@
           <div class="card-body">
             <form action="{{ url_for('sacensibas_labot') }}" method="post">
               <div class="mb-3">
-                <label for="exampleInputEmail1" class="form-label">nosaukums</label>
-                <input type="text" name="nosaukums" placeholder="Ievadiet sacensības nosaukumu" id="nosaukums" class="form-control" aria-describedby="emailHelp" required>
+                <label for="exampleInputEmail1" class="form-label">ID</label>
+                <input type="text" name="ID" placeholder="Ievadiet sacensības ID" id="ID" class="form-control" aria-describedby="emailHelp" required>
               </div>
               <div class="mb-3">
                 <label for="exampleInputEmail1" class="form-label">Jaunais Nosaukums</label>
@@ -110,6 +110,24 @@
           </div>
         </div>
       </div>
+      <div class="col possition_control">
+        <div class="card">
+          <div class="card-header">
+            <h4>Filtrēt pēc Nosaukuma</h4>
+          </div>
+          <div class="card-body">
+            <form>
+              <div class="mb-3">
+                <label for="filter-nosaukums" class="form-label">Nosaukums</label>
+                <input type="text" id="filter-nosaukums" class="form-control" aria-describedby="emailHelp">
+              </div>
+
+              <button type="button" class="btn btn-secondary bg-primary" onclick="filterTable()">Filtrēt</button>
+              <button type="button" class="btn btn-secondary" onclick="resetTable()">Atiestatīt</button>
+            </form>
+          </div>
+        </div>
+      </div>
     </div>
   </div>
 
@@ -120,37 +138,23 @@
       <table class="table table-bordered table-striped table-horse-theme" id="table">
           <thead>
             <tr>
+              <th>ID</th>
               <th>Nosaukums</th>
               <th>Atrašanās vieta</th>
               <th>Sākuma datums</th>
               <th>Beigu datums</th>
               <th>Laiks</th>
-              <th></th>
             </tr>
           </thead>
           <tbody>
             {% for ieraksts in datubaze %}
             <tr>
+              <td>{{ ieraksts.ID }}</td>
               <td>{{ ieraksts.nosaukums }}</td>
-              <td>{{ ieraksts.atrasanasvieta }}</td>
+              <td>{{ ieraksts.atrasanas_vieta }}</td>
               <td>{{ ieraksts.datums_sakums }}</td>
               <td>{{ ieraksts.datums_beigas }}</td>
-              <td>{{ ieraksts.laiks }}</td>
-              <td>
-                <a href="{{ url_for('sacensibas_labot', nosaukums=ieraksts.nosaukums) }}" class="btn btn-primary btn-sm">Labot</a>
-                <a href="{{ url_for('sacensibas_dzest', nosaukums=ieraksts.nosaukums) }}" class="btn btn-danger btn-sm">Dzēst</a>
-              </td>
-            </tr>
-            <tr id="edit-row-{{ ieraksts.nosaukums }}" style="display: none;">
-              <td><input type="text" name="edit-nosaukums" value="{{ ieraksts.nosaukums }}" class="form-control"></td>
-              <td><input type="text" name="edit-atrasanasvieta" value="{{ ieraksts.atrasanasvieta }}" class="form-control"></td>
-              <td><input type="text" name="edit-datums_sakums" value="{{ ieraksts.datums_sakums }}" class="form-control"></td>
-              <td><input type="text" name="edit-datums_beigas" value="{{ ieraksts.datums_beigas }}" class="form-control"></td>
-              <td><input type="text" name="edit-laiks" value="{{ ieraksts.laiks }}" class="form-control"></td>
-              <td>
-                <button class="btn btn-primary btn-sm" onclick="saveRow('{{ ieraksts.nosaukums }}')">Save</button>
-                <button class="btn btn-secondary btn-sm" onclick="dismissChanges('{{ ieraksts.nosaukums }}')">Dismiss Changes</button>
-              </td>
+              <td>{{ ieraksts.jasanas_norises_vieta}}</td>
             </tr>
             {% endfor %}
           </tbody>
@@ -158,81 +162,42 @@
         </tbody>
       </table>
       <div class="text-center mt-3">
-        <a class="btn btn-primary" href="{{ url_for('PDF_dokuments_sacensibas') }}" target="_blank">Print as PDF</a>
+        <a class="btn btn-primary" href="{{ url_for('PDF_dokuments_sacensibas') }}" target="_blank">Saglabāt kā PDF dokumentu</a>
       </div>      
     </div>
   </div>
 
   <script>
-    function editRow(nosaukums) {
-      var row = document.getElementById('edit-row-' + nosaukums);
-      var inputs = row.getElementsByTagName('input');
-      for (var i = 0; i < inputs.length; i++) {
-        inputs[i].disabled = false;
-      }
-      row.getElementsByClassName('btn-primary')[0].style.display = 'inline-block';
-      row.getElementsByClassName('btn-secondary')[0].style.display = 'inline-block';
-      row.getElementsByClassName('btn-info')[0].row.getElementsByClassName('btn-info')[0].style.display = 'none';
-    }
+    function filterTable() {
+      var input = document.getElementById("filter-nosaukums").value.toLowerCase();
+      var table = document.getElementById("table");
+      var rows = table.getElementsByTagName("tr");
 
-    function saveRow(nosaukums) {
-      var row = document.getElementById('edit-row-' + nosaukums);
-      var inputs = row.getElementsByTagName('input');
-      var data = {};
-      for (var i = 0; i < inputs.length; i++) {
-        inputs[i].disabled = true;
-        data[inputs[i].name] = inputs[i].value;
-      }
-      fetch('/sacensibas_labot', {
-        method: 'POST',
-        body: JSON.stringify(data),
-        headers: {
-          'Content-Type': 'application/json'
+      for (var i = 0; i < rows.length; i++) {
+        var cell = rows[i].getElementsByTagName("td")[1];
+
+        if (cell) {
+          var text = cell.textContent.toLowerCase();
+
+          if (text.includes(input)) {
+            rows[i].style.display = "";
+          } else {
+            rows[i].style.display = "none";
+          }
         }
-      })
-      .then(function(response) {
-        return response.json();
-      })
-      .then(function(data) {
-        console.log(data.message);
-        row.getElementsByClassName('btn-primary')[0].style.display = 'none';
-        row.getElementsByClassName('btn-secondary')[0].style.display = 'none';
-        row.getElementsByClassName('btn-info')[0].style.display = 'inline-block';
-      });
-    }
-
-    function dismissChanges(nosaukums) {
-      var row = document.getElementById('edit-row-' + nosaukums);
-      var inputs = row.getElementsByTagName('input');
-      for (var i = 0; i < inputs.length; i++) {
-        inputs[i].disabled = true;
-        inputs[i].value = inputs[i].getAttribute('data-value');
       }
-      row.getElementsByClassName('btn-primary')[0].style.display = 'none';
-      row.getElementsByClassName('btn-secondary')[0].style.display = 'none';
-      row.getElementsByClassName('btn-info')[0].style.display = 'inline-block';
     }
 
-    function deleteRow(nosaukums) {
-      var row = document.getElementById('edit-row-' + nosaukums);
-      var nosaukumsInput = row.getElementsByClassName('nosaukums-input')[0];
-      var nosaukums = nosaukumsInput.value;
-      fetch('/sacensibas_dzest', {
-        method: 'POST',
-        body: JSON.stringify({nosaukums: nosaukums}),
-        headers: {
-          'Content-Type': 'application/json'
-        }
-      })
-      .then(function(response) {
-        return response.json();
-      })
-      .then(function(data) {
-        console.log(data.message);
-        row.remove();
-      });
+    function resetTable() {
+      var table = document.getElementById("table");
+      var rows = table.getElementsByTagName("tr");
+
+      for (var i = 0; i < rows.length; i++) {
+        rows[i].style.display = "";
+      }
     }
   </script>
+
 </body>
 </html>
   {% endblock %}
