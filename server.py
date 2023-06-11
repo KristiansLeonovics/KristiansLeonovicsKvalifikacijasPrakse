@@ -16,6 +16,8 @@ import backend.veikali_saraksts as veikali_saraksts
 import backend.jaunumi_saraksts as jaunumi_saraksts
 import backend.zirgu_pievienosana as zirgu_pievienosana
 import backend.personalizets_grafiks as grafiks
+import backend.kontakti as kontakti
+import backend.kontaktu_saraksts as kontaktu_saraksts
 from backend.register import register_jasana
 
 app = Flask(__name__, static_url_path='/static', static_folder='static')
@@ -42,6 +44,10 @@ def skolas():
 @app.route('/kaleji', methods=['GET', 'POST'])
 def kaleji():
     return datu_atrade.pakavu_kaleji()
+
+@app.route('/kontakti', methods=['GET', 'POST'])
+def lietotajs_kontakti():
+    return kontakti.pievienot_kontakti()
 
 @app.route('/veikali', methods=['GET', 'POST'])
 def veikali():
@@ -374,6 +380,39 @@ def jaunumi_dzest():
         return jaunumi_saraksts.izdzest_jaunumus()
     else:
         return autorizacija.login_jasana()
+    
+#Kontaktu funkcijas
+@app.route('/kontakti_saraksts', methods=['GET', 'POST'])
+def kontakti_saraksts():
+    if 'lietotajvards' in session and session['lietotajvards'] == 'adminlietotajs':
+        cursor = mysql.connection.cursor(MySQLdb.cursors.DictCursor)
+        cursor.execute("SELECT * FROM kontakti") 
+        datubaze = cursor.fetchall()
+        return render_template('/admin/kontakti_saraksts.html', datubaze = datubaze, loggedin=session.get('loggedin', False))
+    else:
+        return autorizacija.login_jasana()
+
+@app.route('/kontakti_labot', methods=['GET', 'POST'])
+def kontakti_labot():
+    if session['lietotajvards'] == 'adminlietotajs':
+        return kontaktu_saraksts.rediget_kontaktus()
+    else:
+        return autorizacija.login_jasana()
+
+@app.route('/kontakti_pievienot', methods=['GET', 'POST'])
+def kontakti_pievienot():
+    if 'lietotajvards' in session and session['lietotajvards'] == 'adminlietotajs':
+        return kontaktu_saraksts.pievienot_kontaktus()
+    else:
+        return autorizacija.login_jasana()
+    
+@app.route('/kontakti_dzest', methods=['GET', 'POST'])
+def kontakti_dzest():
+    if 'lietotajvards' in session and session['lietotajvards'] == 'adminlietotajs':
+        return kontaktu_saraksts.izdzest_kontaktus()
+    else:
+        return autorizacija.login_jasana()
+
 
 @app.route('/PDF_lietotaji')
 def PDF_dokuments_lietotaji():
@@ -406,6 +445,10 @@ def PDF_dokuments_jaunums():
 @app.route('/PDF_personalizets_grafiks_lietotaji')
 def PDF_personalizets_grafiks_lietotaji():
     return PDF.PDF_dokuments_personalizets_grafiks()
+
+@app.route('/PDF_kontakti')
+def PDF_kontakti():
+    return PDF.PDF_dokuments_kontakti()
 
 @app.route('/PDF_sacensibas_lietotaji', methods=['GET', 'POST'])
 def PDF_sacensibas_lietotaji():
