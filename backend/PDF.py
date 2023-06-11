@@ -9,6 +9,7 @@ from reportlab.pdfbase import pdfmetrics
 from reportlab.pdfbase.ttfonts import TTFont
 from unidecode import unidecode
 import datetime
+import locale
 
 mysql = MySQL()
 
@@ -435,6 +436,66 @@ def PDF_dokuments_jaunumi():
     return Response(buffer.getvalue(), mimetype='application/pdf')
 
 
+def PDF_dokuments_kontakti():
+    cursor = mysql.connection.cursor()
+    cursor.execute("SELECT * FROM kontakti")
+    data = cursor.fetchall()
+
+    buffer = BytesIO()
+    pdfmetrics.registerFont(TTFont('Arial', 'backend/arialuni.ttf'))
+    document = SimpleDocTemplate(buffer, pagesize=letter)
+    table_data = [["ID", "Lietotājvārds", "Virsraksts", "Teksts"]]
+
+    for row in data:
+        paragraph_cells = []
+        for cell in row:
+            if isinstance(cell, str):
+                cell = unidecode(cell)
+                paragraph_cells.append(Paragraph(cell, getSampleStyleSheet()['Normal']))
+            else:
+                paragraph_cells.append(Paragraph(str(cell), getSampleStyleSheet()['Normal']))
+        table_data.append(paragraph_cells)
+
+    table = Table(table_data)
+
+    table.setStyle(TableStyle([
+        ('BACKGROUND', (0, 0), (-1, 0), colors.grey),
+        ('TEXTCOLOR', (0, 0), (-1, 0), colors.whitesmoke),
+        ('ALIGN', (0, 0), (-1, -1), 'CENTER'),
+        ('FONTNAME', (0, 0), (-1, 0), 'Arial'),
+        ('FONTSIZE', (0, 0), (-1, 0), 12),
+        ('BOTTOMPADDING', (0, 0), (-1, 0), 12),
+        ('BACKGROUND', (0, 1), (-1, -1), colors.beige),
+        ('GRID', (0, 0), (-1, -1), 1, colors.black),
+    ]))
+
+    elements = []
+    header_text = "SIA \"Horsify\" kontaktu dati"
+    header_paragraph = Paragraph(header_text, getSampleStyleSheet()['Heading1'])
+    elements.append(header_paragraph)
+
+    creation_date = datetime.datetime.now().strftime("%Y-%m-%d")
+    creation_date_style = getSampleStyleSheet()['Normal']
+    creation_date_style.alignment = 2
+    creation_date_paragraph = Paragraph(f"Documents Tika Izveidots: {creation_date}", creation_date_style)
+    elements.append(creation_date_paragraph)
+
+    elements.append(Spacer(1, 12))
+
+    elements.append(table)
+    elements.append(Spacer(1, 24))
+    end_text = "PDF dokumenta noslegums"
+    end_text_style = getSampleStyleSheet()['Normal']
+    end_text_style.alignment = 1
+    end_text_paragraph = Paragraph(end_text, end_text_style)
+    elements.append(end_text_paragraph)
+
+    document.build(elements)
+
+    buffer.seek(0)
+
+    return Response(buffer.getvalue(), mimetype='application/pdf')
+
 #Lietotāja funkcionalitāte
 
 
@@ -482,7 +543,9 @@ def sacensibas_lietotajiem(events):
     ]))
 
     elements = []
-    header_text = "SIA \"Horsify\" Sacensibu dati"
+    locale.setlocale(locale.LC_TIME, 'lv_LV')
+    current_month = datetime.datetime.now().strftime("%B")
+    header_text = f"SIA \"Horsify\" Sacensibu dati, kuri notiek šaja menesi - {current_month.capitalize()}"
     header_paragraph = Paragraph(header_text, getSampleStyleSheet()['Heading1'])
     elements.append(header_paragraph)
 
@@ -542,7 +605,7 @@ def PDF_dokuments_personalizets_grafiks():
     ]))
 
     elements = []
-    header_text = "SIA \"Horsify\" jaunumu dati"
+    header_text = "SIA \"Horsify\" personalizeta grafika dati"
     header_paragraph = Paragraph(header_text, getSampleStyleSheet()['Heading1'])
     elements.append(header_paragraph)
 

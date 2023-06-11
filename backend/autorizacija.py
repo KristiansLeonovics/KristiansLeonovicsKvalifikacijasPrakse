@@ -18,6 +18,7 @@ def login_jasana():
             session['loggedin'] = True
             session['ID'] = account['ID']
             session['lietotajvards'] = account['lietotajvards']
+            session['email'] = account['epasts']
             loggedin = True
             cursor = mysql.connection.cursor(MySQLdb.cursors.DictCursor)
             cursor.execute("SELECT * FROM jaunumi") 
