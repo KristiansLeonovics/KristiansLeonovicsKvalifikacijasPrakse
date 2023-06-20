@@ -5,10 +5,10 @@ import MySQLdb.cursors
 mysql = MySQL()
 
 def izdzest_sacensibas():
-    if request.method == 'POST' and 'nosaukums' in request.form:
+    if request.method == 'POST' and 'ID' in request.form:
         cursor = mysql.connection.cursor(MySQLdb.cursors.DictCursor)
-        nosaukums = request.form['nosaukums']
-        cursor.execute("DELETE FROM sacensibas WHERE nosaukums = %s", (nosaukums, ))
+        ID = request.form['ID']
+        cursor.execute("DELETE FROM sacensibas WHERE ID = %s", (ID, ))
         mysql.connection.commit()
         return redirect(url_for('sacensibas_saraksts'))
     return redirect(url_for('sacensibas_saraksts'))
