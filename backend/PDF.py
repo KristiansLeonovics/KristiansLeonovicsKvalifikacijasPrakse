@@ -573,13 +573,13 @@ def sacensibas_lietotajiem(events):
 
 def PDF_dokuments_personalizets_grafiks():
     cursor = mysql.connection.cursor()
-    cursor.execute("SELECT * FROM lietotaju_darbibas WHERE lietotajsFK = %s", (session['lietotajvards'],))
+    cursor.execute("SELECT nosaukums, datums_sakums, datums_beigas, iestade, ieraksts FROM lietotaju_darbibas WHERE lietotajsFK = %s", (session['lietotajvards'],))
     data = cursor.fetchall()
 
     buffer = BytesIO()
     pdfmetrics.registerFont(TTFont('Arial', 'backend/arialuni.ttf'))
     document = SimpleDocTemplate(buffer, pagesize=letter)
-    table_data = [["ID", "Virsraksts", "Teksts"]]
+    table_data = [["Nosaukums", "Sākuma datums", "Beigu datums", "iestāde", "ieraksts"]]
 
     for row in data:
         paragraph_cells = []

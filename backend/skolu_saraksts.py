@@ -21,7 +21,7 @@ def pievienot_skolas():
         darbalaiks = request.form['darbalaiks']
         WEBadrese = request.form['WEBadrese']
         telefonanumurs = request.form['telefonanumurs']
-        cursor.execute("INSERT INTO jasanasskolas (nosaukums, atrasanasvieta, darbalaiks, WEBadrese, telefona_numurs) VALUES (%s, %s, %s, %s, %s)", (nosaukums, atrasanasvieta, darbalaiks, WEBadrese, telefonanumurs,))
+        cursor.execute("INSERT INTO jasanasskolas (nosaukums, atrasanasvieta, darbalaiks, WEBadrese, telefonanumurs) VALUES (%s, %s, %s, %s, %s)", (nosaukums, atrasanasvieta, darbalaiks, WEBadrese, telefonanumurs,))
         mysql.connection.commit()
         return redirect(url_for('skolas_saraksts'))
     return redirect(url_for('skolas_saraksts'))
